@@ -18,8 +18,7 @@ const ppath = Object.create(path.posix);
 npath.cwd = () => process.cwd();
 ppath.cwd = process.platform === `win32` ? () => toPortablePath(process.cwd()) : process.cwd;
 if (process.platform === `win32`) {
-  ppath.resolve = (...segm
-    ents) => {
+  ppath.resolve = (...segments) => {
     if (segments.length > 0 && ppath.isAbsolute(segments[0])) {
       return path.posix.resolve(...segments);
     } else {
