@@ -1547,6 +1547,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@next/font@npm:^14.2.3":
+  version: 14.2.3
+  resolution: "@next/font@npm:14.2.3"
+  peerDependencies:
+    next: "*"
+  checksum: 10c0/e436515f7830d82d772a0edbd630112c0a5937b6ebecb6995939493fd63c8874bc77b1357f3dfd527f454f44dcd85241aa250ff566c4c8546eac70903ed95364
+  languageName: node
+  linkType: hard
+
 "@next/swc-darwin-arm64@npm:14.2.3":
   version: 14.2.3
   resolution: "@next/swc-darwin-arm64@npm:14.2.3"
@@ -2637,6 +2646,13 @@ __metadata:
   version: 1.0.4
   resolution: "clone@npm:1.0.4"
   checksum: 10c0/2176952b3649293473999a95d7bebfc9dc96410f6cbd3d2595cf12fd401f63a4bf41a7adbfd3ab2ff09ed60cb9870c58c6acdd18b87767366fabfc163700f13b
+  languageName: node
+  linkType: hard
+
+"clsx@npm:^2.1.1":
+  version: 2.1.1
+  resolution: "clsx@npm:2.1.1"
+  checksum: 10c0/c4c8eb865f8c82baab07e71bfa8897c73454881c4f99d6bc81585aecd7c441746c1399d08363dc096c550cceaf97bd4ce1e8854e1771e9998d9f94c4fe075839
   languageName: node
   linkType: hard
 
@@ -4684,7 +4700,9 @@ __metadata:
   resolution: "kkmc_project@workspace:."
   dependencies:
     "@eslint/js": "npm:^9.2.0"
+    "@next/font": "npm:^14.2.3"
     autoprefixer: "npm:^10.4.19"
+    clsx: "npm:^2.1.1"
     eslint: "npm:^9.2.0"
     eslint-config-next: "npm:14.2.3"
     eslint-config-prettier: "npm:^9.1.0"

@@ -545,6 +545,10 @@ const RAW_RUNTIME_STATE =
       "npm:14.2.3"\
     ],\
     [\
+      "@next/font",\
+      "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:14.2.3"\
+    ],\
+    [\
       "@next/swc-darwin-arm64",\
       "npm:14.2.3"\
     ],\
@@ -975,6 +979,10 @@ const RAW_RUNTIME_STATE =
     [\
       "clone",\
       "npm:1.0.4"\
+    ],\
+    [\
+      "clsx",\
+      "npm:2.1.1"\
     ],\
     [\
       "color-convert",\
@@ -2736,7 +2744,9 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./",\
         "packageDependencies": [\
           ["@eslint/js", "npm:9.2.0"],\
+          ["@next/font", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:14.2.3"],\
           ["autoprefixer", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:10.4.19"],\
+          ["clsx", "npm:2.1.1"],\
           ["eslint", "npm:9.2.0"],\
           ["eslint-config-next", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:14.2.3"],\
           ["eslint-config-prettier", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:9.1.0"],\
@@ -5348,6 +5358,28 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["@next/font", [\
+      ["npm:14.2.3", {\
+        "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/@next-font-npm-14.2.3-647d5b5415-10c0.zip/node_modules/@next/font/",\
+        "packageDependencies": [\
+          ["@next/font", "npm:14.2.3"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:14.2.3", {\
+        "packageLocation": "./.yarn/__virtual__/@next-font-virtual-17eedb7cba/2/Users/Dodo/AppData/Local/Yarn/Berry/cache/@next-font-npm-14.2.3-647d5b5415-10c0.zip/node_modules/@next/font/",\
+        "packageDependencies": [\
+          ["@next/font", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:14.2.3"],\
+          ["@types/next", null],\
+          ["next", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:14.2.3"]\
+        ],\
+        "packagePeers": [\
+          "@types/next",\
+          "next"\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["@next/swc-darwin-arm64", [\
       ["npm:14.2.3", {\
         "packageLocation": "./.yarn/unplugged/@next-swc-darwin-arm64-npm-14.2.3-a4a36e8f73/node_modules/@next/swc-darwin-arm64/",\
@@ -6741,6 +6773,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/clone-npm-1.0.4-a610fcbcf9-10c0.zip/node_modules/clone/",\
         "packageDependencies": [\
           ["clone", "npm:1.0.4"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["clsx", [\
+      ["npm:2.1.1", {\
+        "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/clsx-npm-2.1.1-96125b98be-10c0.zip/node_modules/clsx/",\
+        "packageDependencies": [\
+          ["clsx", "npm:2.1.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -9185,7 +9226,9 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["kkmc_project", "workspace:."],\
           ["@eslint/js", "npm:9.2.0"],\
+          ["@next/font", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:14.2.3"],\
           ["autoprefixer", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:10.4.19"],\
+          ["clsx", "npm:2.1.1"],\
           ["eslint", "npm:9.2.0"],\
           ["eslint-config-next", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:14.2.3"],\
           ["eslint-config-prettier", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:9.1.0"],\
