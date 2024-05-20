@@ -12,9 +12,9 @@ export default function SideMenuBtn({ isOpen, setIsOpen }) {
       <svg
         className=" hover:bg-gray-300"
         xmlns="http://www.w3.org/2000/svg"
-        height="40px"
+        height="35px"
         viewBox="0 -960 960 960"
-        width="40px"
+        width="35px"
         fill="#5f6368"
         alt="메뉴"
       >
