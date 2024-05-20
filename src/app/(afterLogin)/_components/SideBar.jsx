@@ -22,27 +22,32 @@ export default function SideBar({ isOpen, setIsOpen }) {
       onClickCloseBtn();
     }
   };
+
+  const handleResize = () => {
+    if (window.innerWidth >= 768) {
+      setIsOpen(false);
+    }
+  };
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
-
+    window.addEventListener("resize", handleResize);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      window.removeEventListener("resize", handleResize);
     };
   });
 
   return (
     <div
-      className={clsx(
-        "tablet:hidden flex flex-col fixed duration-500 w-48 h-full bg-white border-l-3 border-gray p-3",
-        {
-          "right-0": isOpen,
-          "-right-96": !isOpen,
-        },
-      )}
+      className={clsx("tablet:hidden flex flex-col fixed duration-500 w-7/12 h-full bg-white border-l-3 border-gray", {
+        "right-0": isOpen,
+        "-right-3/4": !isOpen,
+      })}
       ref={outside}
     >
-      <button className="flex justify-start">
+      <button className="max-w-10 inline-block p-3">
         <svg
+          className="hover:bg-gray-300"
           xmlns="http://www.w3.org/2000/svg"
           height="30px"
           viewBox="0 -960 960 960"
@@ -56,7 +61,7 @@ export default function SideBar({ isOpen, setIsOpen }) {
       </button>
       <div className="flex flex-col">
         {links.map(link => (
-          <SideBarItem key={link.name} href={link.href} text={link.text} name={link.name} />
+          <SideBarItem key={link.name} href={link.href} text={link.text} />
         ))}
       </div>
     </div>
