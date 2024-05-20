@@ -12,7 +12,7 @@ export default function MainLayout({ children }) {
     <div className="flex flex-row h-full">
       <div className="px-4 w-full">
         <header className="flex flex-row tablet:flex-col">
-          <div className="max-w-60 tablet:max-w-96 mt-4 mb-4">
+          <div className="tablet:max-w-96 mt-4 mb-4">
             <Image src="/icons/kkmc_logo.png" width={350} height={80} alt="kkmc 로고" />
           </div>
           <Headnav />
