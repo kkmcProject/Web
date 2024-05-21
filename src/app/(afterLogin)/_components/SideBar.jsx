@@ -9,6 +9,7 @@ const links = [
   { name: "Home", href: "/", text: "작업계획서 보기" },
   { name: "manage-plan", href: "/manage-plan", text: "작업계획서 관리" },
   { name: "change-info", href: "/change-info", text: "정보 수정" },
+  { name: "/flow/login", href: "/flow/login", text: "로그아웃" },
 ];
 
 export default function SideBar({ isOpen, setIsOpen }) {
@@ -59,7 +60,7 @@ export default function SideBar({ isOpen, setIsOpen }) {
           <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
         </svg>
       </button>
-      <div className="flex flex-col">
+      <div className="flex flex-col h-full">
         {links.map(link => (
           <SideBarItem key={link.name} href={link.href} text={link.text} />
         ))}
