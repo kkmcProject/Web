@@ -7,7 +7,9 @@ export default function SideBarItem({ href, text }) {
   const pathname = usePathname();
   const isLogout = "/flow/login";
   const onLogout = () => {
-    signOut();
+    if (href === isLogout) {
+      signOut();
+    }
   };
   return (
     <div className={clsx({ "flex items-end h-full": href === isLogout })}>
