@@ -4997,6 +4997,7 @@ __metadata:
     prettier: "npm:^3.2.5"
     react: "npm:^18"
     react-dom: "npm:^18"
+    rxjs: "npm:^7.8.1"
     tailwindcss: "npm:^3.4.3"
   languageName: unknown
   linkType: soft
@@ -6594,7 +6595,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rxjs@npm:^7.5.5":
+"rxjs@npm:^7.5.5, rxjs@npm:^7.8.1":
   version: 7.8.1
   resolution: "rxjs@npm:7.8.1"
   dependencies:

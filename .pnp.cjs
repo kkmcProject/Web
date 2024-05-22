@@ -2970,6 +2970,7 @@ const RAW_RUNTIME_STATE =
           ["prettier", "npm:3.2.5"],\
           ["react", "npm:18.3.1"],\
           ["react-dom", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:18.3.1"],\
+          ["rxjs", "npm:7.8.1"],\
           ["tailwindcss", "npm:3.4.3"]\
         ],\
         "linkType": "SOFT"\
@@ -9805,6 +9806,7 @@ const RAW_RUNTIME_STATE =
           ["prettier", "npm:3.2.5"],\
           ["react", "npm:18.3.1"],\
           ["react-dom", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:18.3.1"],\
+          ["rxjs", "npm:7.8.1"],\
           ["tailwindcss", "npm:3.4.3"]\
         ],\
         "linkType": "SOFT"\

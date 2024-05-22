@@ -1,12 +1,12 @@
 {
   "theme_color": "#f69435",
   "background_color": "#f69435",
-  "display": "standalone",
+  "display": "browser",
   "scope": "/",
   "start_url": "/",
   "name": "KKMC_MES",
   "short_name": "KKMC_MES",
-  "description": "KKMC MES",
+  "description": "KKMC_MES",
   "icons": [
     {
       "src": "/icons/pwa-icons/icon-192x192.png",
