@@ -41,7 +41,7 @@ export default function Signup() {
           생산관리 시스템
         </div>
         <Image
-          src={process.env.NEXT_PUBLIC_PUBLIC_URL + "/icons/kkmc_logo.png"}
+          src="/icons/kkmc_logo.png"
           alt="회원가입 페이지 로고"
           width={200}
           height={150}
