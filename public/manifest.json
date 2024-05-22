@@ -3,7 +3,7 @@
   "background_color": "#f69435",
   "display": "browser",
   "scope": "/",
-  "start_url": "/",
+  "start_url": "/https://kkmc.vercel.app/",
   "name": "KKMC_MES",
   "short_name": "KKMC_MES",
   "description": "KKMC_MES",
