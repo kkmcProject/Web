@@ -49,7 +49,7 @@ export default function Login() {
           생산관리 시스템
         </div>
         <Image
-          src="/icons/kkmc_logo.png"
+          src={process.env.NEXT_PUBLIC_PUBLIC_URL + "/icons/kkmc_logo.png"}
           alt="로그인 페이지 로고"
           width={200}
           height={150}
