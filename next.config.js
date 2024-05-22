@@ -23,7 +23,7 @@ const withPWA = require("next-pwa")({
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["localhost"],
+    domains: ["localhost", "https://kkmc-project-deploy-f7o3p59iy-leedohyuns-projects.vercel.app/"],
   },
 };
 
