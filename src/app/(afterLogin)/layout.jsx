@@ -18,12 +18,7 @@ export default function MainLayout({ children }) {
       >
         <header className="flex flex-row tablet:flex-col">
           <div className="tablet:max-w-96 mt-4 mb-4">
-            <Image
-              src={process.env.NEXT_PUBLIC_PUBLIC_URL + "/icons/kkmc_logo.png"}
-              width={350}
-              height={80}
-              alt="kkmc 로고"
-            />
+            <Image src="/icons/kkmc_logo.png" width={350} height={80} alt="kkmc 로고" />
           </div>
           <Headnav />
           <SideMenuBtn className="flex justify-end h-full items-center" isOpen={isOpen} setIsOpen={setIsOpen} />
