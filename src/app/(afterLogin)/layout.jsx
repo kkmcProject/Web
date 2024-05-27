@@ -5,10 +5,12 @@ import Headnav from "./_components/Headnav";
 import SideMenuBtn from "./_components/SideMenuBtn";
 import SideBar from "./_components/SideBar";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 import clsx from "clsx";
 
 export default function MainLayout({ children }) {
   const [isOpen, setIsOpen] = useState(false);
+  const { data: me } = useSession();
   return (
     <div className="flex flex-row h-full">
       <div
@@ -26,6 +28,7 @@ export default function MainLayout({ children }) {
         {children}
       </div>
       <SideBar isOpen={isOpen} setIsOpen={setIsOpen} />
+      {/*<div>내 정보는 {me && me.user.result}</div>*/}
     </div>
   );
 }

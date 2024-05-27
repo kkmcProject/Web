@@ -1,3 +1,4 @@
+/*
 import { http, HttpResponse, StrictResponse } from "msw";
 
 const User = [
@@ -36,3 +37,4 @@ export const handlers = [
     });
   }),
 ];
+*/

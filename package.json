@@ -12,7 +12,9 @@
   "dependencies": {
     "@mswjs/http-middleware": "^0.10.1",
     "@next/font": "^14.2.3",
+    "@vercel/postgres": "^0.8.0",
     "clsx": "^2.1.1",
+    "cookie": "^0.6.0",
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "next": "14.2.3",
@@ -21,7 +23,9 @@
     "openssl": "^2.0.0",
     "react": "^18",
     "react-dom": "^18",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "vercel": "^34.2.1",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.2.0",

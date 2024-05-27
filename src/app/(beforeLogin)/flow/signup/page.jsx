@@ -1,5 +1,6 @@
 import Image from "next/image";
-import Link from "next/link";
+
+import SignUpForm from "../../_components/SignUpForm";
 
 export default function Signup() {
   const submit = async formData => {
@@ -50,110 +51,7 @@ export default function Signup() {
         <div
           style={{ backgroundColor: "hsla(43, 30%, 95%, 1)", padding: "20px", width: "100%", boxSizing: "border-box" }}
         >
-          <form style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              placeholder="이름"
-              required
-              style={{
-                marginBottom: "12px",
-                padding: "8px",
-                backgroundColor: "hsla(0, 0%, 90%, 1)",
-                width: "80%",
-                border: "1px solid #d3d3d3",
-                color: "black",
-              }}
-            />
-            <input
-              type="text"
-              id="position"
-              name="position"
-              placeholder="직급"
-              required
-              style={{
-                marginBottom: "12px",
-                padding: "8px",
-                backgroundColor: "hsla(0, 0%, 90%, 1)",
-                width: "80%",
-                border: "1px solid #d3d3d3",
-                color: "black",
-              }}
-            />
-            <input
-              type="text"
-              id="id"
-              name="id"
-              placeholder="아이디"
-              required
-              style={{
-                marginBottom: "12px",
-                padding: "8px",
-                backgroundColor: "hsla(0, 0%, 90%, 1)",
-                width: "80%",
-                border: "1px solid #d3d3d3",
-                color: "black",
-              }}
-            />
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="비밀번호"
-              required
-              style={{
-                marginBottom: "12px",
-                padding: "8px",
-                backgroundColor: "hsla(0, 0%, 90%, 1)",
-                width: "80%",
-                border: "1px solid #d3d3d3",
-                color: "black",
-              }}
-            />
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              placeholder="비밀번호 확인"
-              required
-              style={{
-                marginBottom: "20px",
-                padding: "8px",
-                backgroundColor: "hsla(0, 0%, 90%, 1)",
-                width: "80%",
-                border: "1px solid #d3d3d3",
-                color: "black",
-              }}
-            />
-            <button
-              type="submit"
-              style={{
-                padding: "10px",
-                backgroundColor: "#000000",
-                color: "white",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
-                width: "90%",
-                marginBottom: "10px",
-              }}
-            >
-              회원가입
-            </button>
-            <Link
-              href="/flow/login"
-              style={{
-                textAlign: "center",
-                fontSize: "12px",
-                color: "black",
-                textDecoration: "none",
-                marginTop: "10px",
-              }}
-            >
-              로그인 페이지로 돌아가기
-            </Link>
-          </form>
+          <SignUpForm />
         </div>
       </div>
     </div>

@@ -1,7 +1,6 @@
-import { MSWComponent } from "./_component/MSWComponent";
+import AuthSession from "./_component/AuthSession";
 import "./globals.css";
 import { Noto_Sans_KR } from "next/font/google";
-import Head from "next/head";
 const noto = Noto_Sans_KR({ subsets: ["latin"], weight: ["400"] });
 
 export const viewport = {
@@ -29,8 +28,7 @@ export default function RooyLayout({ children }) {
     <html lang="ko">
       <link rel="manifest" href="/manifest.json"></link>
       <body className={noto.className}>
-        <MSWComponent />
-        {children}
+        <AuthSession>{children}</AuthSession>
       </body>
     </html>
   );

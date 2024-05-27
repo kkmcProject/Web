@@ -13,6 +13,8 @@ module.exports = {
       colors: {
         "kkmc-gray": "#555555",
         "underbar-blue": "008EDC",
+        "input-bg": "#e6e6e6",
+        "input-border": "#d3d3d3",
       },
 
       screens: {

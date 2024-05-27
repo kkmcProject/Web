@@ -1,18 +1,18 @@
 "use client";
-import Image from "next/image";
 import clsx from "clsx";
 import { useEffect, useRef } from "react";
 import SideBarItem from "./SideBarItem";
-import { usePathname } from "next/navigation";
-
+import { signOut } from "next-auth/react";
 const links = [
   { name: "Home", href: "/", text: "작업계획서 보기" },
   { name: "manage-plan", href: "/manage-plan", text: "작업계획서 관리" },
   { name: "change-info", href: "/change-info", text: "정보 수정" },
-  { name: "/flow/login", href: "/flow/login", text: "로그아웃" },
 ];
 
 export default function SideBar({ isOpen, setIsOpen }) {
+  const onLogout = () => {
+    signOut();
+  };
   const outside = useRef();
 
   const onClickCloseBtn = () => {
@@ -64,6 +64,17 @@ export default function SideBar({ isOpen, setIsOpen }) {
         {links.map(link => (
           <SideBarItem key={link.name} href={link.href} text={link.text} />
         ))}
+        <div className="flex items-end h-full">
+          <div
+            className="pl-2 w-full flex py-6 h-10 border-t-2 items-center hover:bg-gray-300 cursor-pointer"
+            onClick={onLogout}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+              <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z" />
+            </svg>
+            <span className="ml-2 "> 로그아웃</span>
+          </div>
+        </div>
       </div>
     </div>
   );
