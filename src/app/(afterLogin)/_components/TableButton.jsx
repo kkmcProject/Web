@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Papa from "papaparse";
+import Link from "next/link";
 
 export default function TableButton() {
   const [rows, setRows] = useState([]);
@@ -55,9 +56,12 @@ export default function TableButton() {
   };
   useEffect(() => {});
   return (
-    <form onSubmit={handleSubmit}>
-      <input type="file" accept=".csv" onChange={onChange} />
-      <button type="submit">Upload</button>
-    </form>
+    <div>
+      <form onSubmit={handleSubmit}>
+        <input type="file" accept=".csv" onChange={onChange} />
+        <button type="submit">Upload</button>
+      </form>
+      <Link href="/manage-plan/modal">모달 띄우기</Link>
+    </div>
   );
 }

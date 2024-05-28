@@ -1,5 +1,5 @@
-import TablePage from "./_components/Table";
+import Table from "./_components/Table";
 
 export default function MainPage() {
-  return <TablePage />;
+  return <Table />;
 }

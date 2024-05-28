@@ -26,7 +26,7 @@ export const metadata = {
 export default function RooyLayout({ children }) {
   return (
     <html lang="ko">
-      <link rel="manifest" href="/manifest.json"></link>
+      <link rel="/manifest" href="/manifest.json"></link>
       <body className={noto.className}>
         <AuthSession>{children}</AuthSession>
       </body>

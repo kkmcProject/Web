@@ -1,7 +1,7 @@
 import SideBar from "./_components/SideBar";
 import HeaderContainer from "./_components/HeaderContainer";
 
-export default function MainLayout({ children, modal }) {
+export default function MainLayout({ children }) {
   // const { data: me } = useSession(); // 사용자 정보 불러오기
   return (
     <div className="flex flex-row h-full">
