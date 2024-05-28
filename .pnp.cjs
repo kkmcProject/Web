@@ -2521,6 +2521,10 @@ const RAW_RUNTIME_STATE =
       "npm:2.2.0"\
     ],\
     [\
+      "papaparse",\
+      "npm:5.4.1"\
+    ],\
+    [\
       "parent-module",\
       "npm:1.0.1"\
     ],\
@@ -3524,6 +3528,7 @@ const RAW_RUNTIME_STATE =
           ["next-pwa", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:5.6.0"],\
           ["oidc-token-hash", "npm:5.0.1"],\
           ["openssl", "npm:2.0.0"],\
+          ["papaparse", "npm:5.4.1"],\
           ["postcss", "npm:8.4.38"],\
           ["prettier", "npm:3.2.5"],\
           ["react", "npm:18.3.1"],\
@@ -11581,6 +11586,7 @@ const RAW_RUNTIME_STATE =
           ["next-pwa", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:5.6.0"],\
           ["oidc-token-hash", "npm:5.0.1"],\
           ["openssl", "npm:2.0.0"],\
+          ["papaparse", "npm:5.4.1"],\
           ["postcss", "npm:8.4.38"],\
           ["prettier", "npm:3.2.5"],\
           ["react", "npm:18.3.1"],\
@@ -12809,6 +12815,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/p-try-npm-2.2.0-e0390dbaf8-10c0.zip/node_modules/p-try/",\
         "packageDependencies": [\
           ["p-try", "npm:2.2.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["papaparse", [\
+      ["npm:5.4.1", {\
+        "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/papaparse-npm-5.4.1-954555a2a7-10c0.zip/node_modules/papaparse/",\
+        "packageDependencies": [\
+          ["papaparse", "npm:5.4.1"]\
         ],\
         "linkType": "HARD"\
       }]\

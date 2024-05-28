@@ -1,8 +1,9 @@
-import Image from "next/image";
-import SideBar from "./SideBar";
-import { useState } from "react";
+"use client";
+import { useShallow } from "zustand/react/shallow";
+import { useSideBarIsOpen } from "@/store/SideBarIsOpen";
 
-export default function SideMenuBtn({ isOpen, setIsOpen }) {
+export default function SideMenuBtn() {
+  const { setIsOpen } = useSideBarIsOpen(useShallow(state => ({ setIsOpen: state.setIsOpen })));
   const onClickSideBtn = () => {
     setIsOpen(true);
   };

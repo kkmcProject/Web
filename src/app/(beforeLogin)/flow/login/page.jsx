@@ -1,12 +1,7 @@
-"use client";
-import { authenticate } from "@/lib/actions";
-import { useFormState } from "react-dom";
-
 import Image from "next/image";
 import LoginForm from "../../_components/LoginForm";
 
 export default function Login() {
-  const [errorMsg, dispatch] = useFormState(authenticate, undefined);
   return (
     <div
       style={{

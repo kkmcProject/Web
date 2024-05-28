@@ -4,9 +4,15 @@ import { usePathname } from "next/navigation";
 import clsx from "clsx";
 
 export default function SideBarItem({ href, text }) {
+  const pathname = usePathname();
   return (
     <div>
-      <Link className={clsx("w-full flex py-6 h-10 border-b-2 items-center hover:bg-gray-300")} href={href}>
+      <Link
+        className={clsx("w-full flex py-6 h-10 border-b-2 items-center hover:bg-gray-300", {
+          "bg-blue-200": pathname === href,
+        })}
+        href={href}
+      >
         <div className="flex pl-2">
           {href === "/" && (
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
