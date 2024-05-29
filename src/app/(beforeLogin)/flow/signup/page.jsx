@@ -1,5 +1,4 @@
 import Image from "next/image";
-
 import SignUpForm from "../../_components/SignUpForm";
 
 export default function Signup() {
@@ -9,8 +8,7 @@ export default function Signup() {
     // 여기서 바로 db에 접근할 수 있음.
     // 아래는 msw 임시 요청 코드
     try {
-      const response = await (fetch`${process.env.NEXT_PUBLIC_BASE_URL}/api/users`,
-      {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users`, {
         method: "post",
         body: formData,
         credentials: "include",
@@ -25,18 +23,11 @@ export default function Signup() {
       redirect("/");
     }
   };
+
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh",
-      }}
-    >
-      <div style={{ border: "2px solid #a7a7a7", borderRadius: "10px", overflow: "hidden", width: "350px" }}>
-        <div style={{ padding: "20px", textAlign: "center", fontSize: "20px", color: "#000000" }}>
+    <div className="flex flex-col items-center justify-center h-screen">
+      <div className="border-2 border-gray-200 rounded-lg overflow-hidden w-80">
+        <div className="p-5 text-center text-xl text-black">
           KKMC
           <br />
           생산관리 시스템
@@ -46,11 +37,9 @@ export default function Signup() {
           alt="회원가입 페이지 로고"
           width={200}
           height={150}
-          style={{ display: "block", margin: "0 auto" }}
+          className="block mx-auto"
         />
-        <div
-          style={{ backgroundColor: "hsla(43, 30%, 95%, 1)", padding: "20px", width: "100%", boxSizing: "border-box" }}
-        >
+        <div className="bg-[hsla(43,30%,95%,1)] p-5 w-full box-border">
           <SignUpForm />
         </div>
       </div>

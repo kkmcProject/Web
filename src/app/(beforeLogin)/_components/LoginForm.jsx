@@ -38,7 +38,7 @@ export default function LoginForm() {
     }
   }, []);
   return (
-    <form style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }} onSubmit={onSubmit}>
+    <form className="flex flex-col items-center w-full" onSubmit={onSubmit}>
       <InputBox type="text" id="id" name="id" placeholder="아이디" formData={formData} setFormData={setFormData} />
       <InputBox
         type="password"
@@ -51,16 +51,7 @@ export default function LoginForm() {
       <div className="text-red-600 mb-4">{message}</div>
       <button
         type="submit"
-        style={{
-          padding: "10px",
-          backgroundColor: "#000000",
-          color: "white",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer",
-          width: "90%",
-          marginBottom: "10px",
-        }}
+        className="py-2 bg-black text-white border-none rounded cursor-pointer w-11/12 mb-2"
       >
         로그인
       </button>
@@ -68,19 +59,7 @@ export default function LoginForm() {
       <div className="flex justify-center items-center w-11/12">
         <Link
           href="/flow/signup"
-          style={{
-            textAlign: "center",
-            fontSize: "12px",
-            padding: "10px",
-            backgroundColor: "hsla(43, 30%, 95%, 1)",
-            color: "black",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-            width: "48%",
-            display: "block",
-            textDecoration: "none",
-          }}
+          className="text-center text-sm py-2 bg-[hsla(43,30%,95%,1)] text-black border-none rounded cursor-pointer w-6/12 block"
         >
           회원가입
         </Link>

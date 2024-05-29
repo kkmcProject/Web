@@ -3,17 +3,9 @@ import LoginForm from "../../_components/LoginForm";
 
 export default function Login() {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh",
-      }}
-    >
-      <div style={{ border: "2px solid #a7a7a7", borderRadius: "10px", overflow: "hidden", width: "350px" }}>
-        <div style={{ padding: "20px", textAlign: "center", fontSize: "20px", color: "#000000" }}>
+    <div className="flex flex-col items-center justify-center h-screen">
+      <div className="border-2 border-gray-200 rounded-lg overflow-hidden w-80">
+        <div className="p-5 text-center text-xl text-black">
           KKMC
           <br />
           생산관리 시스템
@@ -23,11 +15,9 @@ export default function Login() {
           alt="로그인 페이지 로고"
           width={200}
           height={150}
-          style={{ display: "block", margin: "0 auto" }}
+          className="block mx-auto"
         />
-        <div
-          style={{ backgroundColor: "hsla(43, 30%, 95%, 1)", padding: "20px", width: "100%", boxSizing: "border-box" }}
-        >
+        <div className="bg-[hsla(43,30%,95%,1)] p-5 w-full box-border">
           <LoginForm />
         </div>
       </div>
