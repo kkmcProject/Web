@@ -7,14 +7,18 @@ import { useShallow } from "zustand/react/shallow";
 import { useTableData } from "@/store/TableData";
 
 export default function TableComponent() {
-  const { rows, checkedRows, setRows, setCheckedRows } = useTableData(
+  const { rows, checkedRows, setRows, setCheckedRows, rowRefs, setRowRefs } = useTableData(
     useShallow(state => ({
       rows: state.rows,
       checkedRows: state.checkedRows,
       setRows: state.setRows,
       setCheckedRows: state.setCheckedRows,
+      rowRefs: state.rowRefs,
+      setRowRefs: state.setRowRefs,
     })),
   );
+
+
   const pathname = usePathname();
   const checkPathname = pathname === "/manage-plan" || pathname === "/manage-plan/modal";
 
@@ -22,21 +26,23 @@ export default function TableComponent() {
   const headers = rows.length > 0 ? ["체크", ...RowKeys] : [];
 
   const handleCheck = index => {
-    setCheckedRows(prev => {
-      if (prev.includes(index)) {
-        return prev.filter(i => i !== index);
-      } else {
-        return [...prev, index];
-      }
-    });
+    let newCheckedRows = [...checkedRows];
+
+    if (newCheckedRows.includes(index)) {
+      return newCheckedRows.filter(i => i !== index);
+    }
+    else {
+      newCheckedRows = [...newCheckedRows, index];
+    }
+
+    setCheckedRows(newCheckedRows);
+
   };
 
   // checkPathname 안의 경로가 아니라면 첫번째("체크")항목 제거
   if (!checkPathname) headers.shift();
 
-  useEffect(() => {
-    console.log(rows);
-  }, [rows]);
+
   return (
     <div className="w-full">
       <div className="w-full flex items-center"></div>
@@ -51,15 +57,10 @@ export default function TableComponent() {
           </tr>
         </thead>
         <tbody>
-          {rows.length === 0 ? (
-            <tr>
-              <td colSpan={headers.length} className="py-2 px-4 text-center">
-                데이터 없음
-              </td>
-            </tr>
-          ) : (
+
+        { rows && 
             rows.map((row, rowIndex) => (
-              <tr key={rowIndex} className="hover:bg-gray-100">
+              <tr key={rowIndex} id={'index' + rowIndex} className="hover:bg-gray-100">
                 {checkPathname && (
                   <td className="py-2 px-4 border border-gray-300 text-center">
                     <input
@@ -77,7 +78,9 @@ export default function TableComponent() {
                 ))}
               </tr>
             ))
-          )}
+        }     
+          
+
         </tbody>
       </table>
     </div>

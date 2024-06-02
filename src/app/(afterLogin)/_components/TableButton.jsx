@@ -10,17 +10,18 @@ import { useShallow } from "zustand/react/shallow";
 import { useTableData } from "@/store/TableData";
 
 export default function TableButton() {
-  const { rows, setRows, checkedRows, setCheckedRows } = useTableData(
+  const { rows, setRows, checkedRows, setCheckedRows, rowRefs, setRowRefs } = useTableData(
     useShallow(state => ({
       rows: state.rows,
       setRows: state.setRows,
       checkedRows: state.checkedRows,
       setCheckedRows: state.setCheckedRows,
+      rowRefs: state.rowRefs,
+      setRowRefs: state.setRowRefs,
     })),
   );
   const [filename, setFilename] = useState("");
 
-  console.log("checkedROws", checkedRows.includes(0));
 
   useEffect(() => {
     const swiper = new Swiper(".swiper", {
@@ -60,7 +61,7 @@ export default function TableButton() {
       header: true,
       complete: async function (results) {
         setRows(results.data);
-
+       
         // if (!rows) return;
 
         // const body = {
@@ -81,32 +82,63 @@ export default function TableButton() {
   };
 
   const handleMoveUp = () => {
-    console.log("upupupupp");
-    setRows(prevRows => {
-      console.log("prevRows", prevRows);
-      const newRows = [...prevRows];
-      console.log("checkdRows", checkedRows);
-      checkedRows.forEach(index => {
-        if (index > 0) {
-          const temp = newRows[index];
-          newRows[index] = newRows[index - 1];
-          newRows[index - 1] = temp;
-        }
-      });
-      return newRows;
+    if(rows.length===0) return;
+
+    const newRows = [...rows];
+    checkedRows.forEach(index => {
+      if (index > 0) {
+        const temp = newRows[index];
+        newRows[index] = newRows[index - 1];
+        newRows[index - 1] = temp;
+      }
     });
+
+    setRows(newRows);
+
 
     const newCheckedRows = checkedRows.map(index => index - 1);
     setCheckedRows(newCheckedRows);
 
     // 포커스 이동
-    setTimeout(() => {
-      newCheckedRows.forEach(index => {
-        rowRefs.current[index]?.scrollIntoView({ behavior: "smooth", block: "center" });
+
+      newCheckedRows.some(index => {
+        let idx = "index" + index;
+        const element = document.getElementById(idx);
+        if(element){
+          element.scrollIntoView({ behavior: "smooth", block: "center" });
+          return true;
+        }
+        return false;
       });
-    }, 100);
   };
-  const handleMoveDown = () => {};
+  const handleMoveDown = () => {
+    if (rows.length === 0) return;
+  
+    const newRows = [...rows];
+    checkedRows.slice().reverse().forEach(index => {
+      if (index < newRows.length - 1) {
+        const temp = newRows[index];
+        newRows[index] = newRows[index + 1];
+        newRows[index + 1] = temp;
+      }
+    });
+  
+    setRows(newRows);
+  
+    const newCheckedRows = checkedRows.map(index => index + 1);
+    setCheckedRows(newCheckedRows);
+  
+    // 포커스 이동
+    newCheckedRows.some(index => {
+      let idx = "index" + index;
+      const element = document.getElementById(idx);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+        return true;
+      }
+      return false;
+    });
+  };
 
   return (
     <div className="Button flex swiper overflow-hidden h-full items-center">
