@@ -18,9 +18,11 @@ body {
 html {
   display: flex;
   min-height: 100%;
-  overflow-y: auto;
-  overflow-x: auto;
 }
 
 @layer utilities {
+}
+
+.swiper-slide {
+  width: auto !important;
 }

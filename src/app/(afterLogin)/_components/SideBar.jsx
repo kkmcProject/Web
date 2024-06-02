@@ -59,7 +59,7 @@ export default function SideBar() {
 
       <div
         className={clsx(
-          "tablet:hidden flex flex-col absolute duration-500 w-7/12 h-full bg-white border-l-3 border-gray",
+          "tablet:hidden flex flex-col fixed duration-500 w-7/12 h-full bg-white border-l-3 border-gray",
           {
             "right-0 ": isOpen,
             "-right-3/4": !isOpen,

@@ -3079,6 +3079,10 @@ const RAW_RUNTIME_STATE =
       "npm:1.0.0"\
     ],\
     [\
+      "swiper",\
+      "npm:11.1.4"\
+    ],\
+    [\
       "synckit",\
       "npm:0.8.8"\
     ],\
@@ -3534,6 +3538,7 @@ const RAW_RUNTIME_STATE =
           ["react", "npm:18.3.1"],\
           ["react-dom", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:18.3.1"],\
           ["rxjs", "npm:7.8.1"],\
+          ["swiper", "npm:11.1.4"],\
           ["tailwindcss", "npm:3.4.3"],\
           ["vercel", "npm:34.2.1"],\
           ["zustand", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:4.5.2"]\
@@ -11592,6 +11597,7 @@ const RAW_RUNTIME_STATE =
           ["react", "npm:18.3.1"],\
           ["react-dom", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:18.3.1"],\
           ["rxjs", "npm:7.8.1"],\
+          ["swiper", "npm:11.1.4"],\
           ["tailwindcss", "npm:3.4.3"],\
           ["vercel", "npm:34.2.1"],\
           ["zustand", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:4.5.2"]\
@@ -14535,6 +14541,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/supports-preserve-symlinks-flag-npm-1.0.0-f17c4d0028-10c0.zip/node_modules/supports-preserve-symlinks-flag/",\
         "packageDependencies": [\
           ["supports-preserve-symlinks-flag", "npm:1.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["swiper", [\
+      ["npm:11.1.4", {\
+        "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/swiper-npm-11.1.4-d9e487eecf-10c0.zip/node_modules/swiper/",\
+        "packageDependencies": [\
+          ["swiper", "npm:11.1.4"]\
         ],\
         "linkType": "HARD"\
       }]\

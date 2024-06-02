@@ -1,93 +1,46 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import React, { useState } from "react";
-import TableButton from "./TableButton";
+import React, { useEffect, useState } from "react";
+
+import { useShallow } from "zustand/react/shallow";
+import { useTableData } from "@/store/TableData";
 
 export default function TableComponent() {
+  const { rows, checkedRows, setRows, setCheckedRows } = useTableData(
+    useShallow(state => ({
+      rows: state.rows,
+      checkedRows: state.checkedRows,
+      setRows: state.setRows,
+      setCheckedRows: state.setCheckedRows,
+    })),
+  );
   const pathname = usePathname();
+  const checkPathname = pathname === "/manage-plan" || pathname === "/manage-plan/modal";
 
-  const headers = [
-    "체크",
-    "업체",
-    "품목",
-    "과수",
-    "원산지",
-    "포장형태",
-    "상품명1",
-    "입수",
-    "단량",
-    "재고/정비 생산수량",
-    "수량",
-    "중량",
-    "바코드",
-    "상품명2",
-  ];
+  const RowKeys = rows.length > 0 && rows[0] ? Object.keys(rows[0]) : [];
+  const headers = rows.length > 0 ? ["체크", ...RowKeys] : [];
 
-  // 만약 경로가 메인이라면, 체크박스를 제거.
-  if (pathname === "/") headers.shift();
-
-  const defaultData = {
-    전체: [
-      [
-        "노브랜드",
-        "라임",
-        "200과",
-        "멕시코",
-        "팩",
-        "200 팩 3",
-        "4",
-        "0",
-        "재고 111",
-        "8",
-        "8",
-        "111111111111",
-        "라임(3입/팩)",
-      ],
-      [
-        "노브랜드",
-        "오렌지",
-        "100과",
-        "미국",
-        "팩",
-        "100 팩 2",
-        "2",
-        "0",
-        "재고 50",
-        "4",
-        "4",
-        "222222222222",
-        "라임(3입/팩)",
-      ],
-    ],
-    세척반: [],
-    "1반": [],
-    "2반": [],
-    "3반": [],
-    "4반": [],
-    "5반": [],
+  const handleCheck = index => {
+    setCheckedRows(prev => {
+      if (prev.includes(index)) {
+        return prev.filter(i => i !== index);
+      } else {
+        return [...prev, index];
+      }
+    });
   };
 
-  const [activeTab, setActiveTab] = useState("전체");
+  // checkPathname 안의 경로가 아니라면 첫번째("체크")항목 제거
+  if (!checkPathname) headers.shift();
 
+  useEffect(() => {
+    console.log(rows);
+  }, [rows]);
   return (
-    <div className="overflow-x-auto w-full">
-      <div className="flex items-center">
-        <div className="flex p-2 border-b border-gray-300">
-          {Object.keys(defaultData).map(tab => (
-            <button
-              key={tab}
-              className={`text-center py-2 px-4 border border-gray-300 ${activeTab === tab ? "bg-blue-500 text-white" : "bg-white"}`}
-              onClick={() => setActiveTab(tab)}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
-        {pathname === "/manage-plan" && <TableButton />}
-      </div>
-
-      <table className="min-w-full bg-white border border-gray-300">
+    <div className="w-full">
+      <div className="w-full flex items-center"></div>
+      <table className="min-w-full max-w-full w-fulloverflow-y-scroll whitespace-nowrap">
         <thead>
           <tr>
             {headers.map((header, index) => (
@@ -98,23 +51,28 @@ export default function TableComponent() {
           </tr>
         </thead>
         <tbody>
-          {defaultData[activeTab].length === 0 ? (
+          {rows.length === 0 ? (
             <tr>
-              <td colSpan={headers.length} className="py-2 px-4 border border-gray-300 text-center">
+              <td colSpan={headers.length} className="py-2 px-4 text-center">
                 데이터 없음
               </td>
             </tr>
           ) : (
-            defaultData[activeTab].map((row, rowIndex) => (
+            rows.map((row, rowIndex) => (
               <tr key={rowIndex} className="hover:bg-gray-100">
-                {pathname === "/manage-plan" && (
+                {checkPathname && (
                   <td className="py-2 px-4 border border-gray-300 text-center">
-                    <input type="checkbox" />
+                    <input
+                      type="checkbox"
+                      checked={checkedRows.includes(rowIndex)}
+                      onChange={() => handleCheck(rowIndex)}
+                    />
                   </td>
                 )}
-                {row.map((cell, cellIndex) => (
-                  <td key={cellIndex} className="py-2 px-4 border border-gray-300">
-                    {cell}
+
+                {Object.keys(row).map(key => (
+                  <td key={key} className="py-2 px-4 border border-gray-300">
+                    {row[key]}
                   </td>
                 ))}
               </tr>
