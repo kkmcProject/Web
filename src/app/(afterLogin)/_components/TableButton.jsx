@@ -10,18 +10,15 @@ import { useShallow } from "zustand/react/shallow";
 import { useTableData } from "@/store/TableData";
 
 export default function TableButton() {
-  const { rows, setRows, checkedRows, setCheckedRows, rowRefs, setRowRefs } = useTableData(
+  const { rows, setRows, checkedRows, setCheckedRows } = useTableData(
     useShallow(state => ({
       rows: state.rows,
       setRows: state.setRows,
       checkedRows: state.checkedRows,
       setCheckedRows: state.setCheckedRows,
-      rowRefs: state.rowRefs,
-      setRowRefs: state.setRowRefs,
     })),
   );
   const [filename, setFilename] = useState("");
-
 
   useEffect(() => {
     const swiper = new Swiper(".swiper", {
@@ -42,9 +39,12 @@ export default function TableButton() {
 
   const handleLoad = async e => {
     let file = e.target.files[0];
-    if (file) {
-      setFilename(file.name);
+    if (!file) {
+      // 파일이 선택되지 않은 경우 처리 중단
+      return;
     }
+    setCheckedRows([]);
+    setFilename(file.name);
 
     let readFile = file =>
       new Promise((resolve, reject) => {
@@ -60,84 +60,139 @@ export default function TableButton() {
     Papa.parse(csvText, {
       header: true,
       complete: async function (results) {
-        setRows(results.data);
-       
-        // if (!rows) return;
-
-        // const body = {
-        //   filename,
-        //   rows,
-        // };
-
-        // const res = await fetch("/api/TableInsert", {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //   },
-        //   body: JSON.stringify(body),
-        // });
+        const groups = ["Group1", "Group2", "Group3", "Group4"];
+        const resultData = results.data.map(row => ({
+          ...row,
+          workGroup: groups[Math.floor(Math.random() * groups.length)],
+        }));
+        setRows(resultData);
       },
     });
-    //const result = JSON.stringify(rows, null, 2);
   };
 
+  
+
   const handleMoveUp = () => {
-    if(rows.length===0) return;
+    if (rows.length === 0) return;
 
     const newRows = [...rows];
+    const newCheckedRows = [];
+
     checkedRows.forEach(index => {
       if (index > 0) {
         const temp = newRows[index];
         newRows[index] = newRows[index - 1];
         newRows[index - 1] = temp;
+
+        newCheckedRows.push(index - 1);
+      } else {
+        newCheckedRows.push(index);
       }
     });
 
     setRows(newRows);
-
-
-    const newCheckedRows = checkedRows.map(index => index - 1);
     setCheckedRows(newCheckedRows);
+    const handleMoveUp = () => {
+      if (rows.length === 0) return;
+  
+      const newRows = [...rows];
+      const newCheckedRows = [];
+  
+      checkedRows.forEach(index => {
+        if (index > 0) {
+          const temp = newRows[index];
+          newRows[index] = newRows[index - 1];
+          newRows[index - 1] = temp;
+  
+          newCheckedRows.push(index - 1);
+        } else {
+          newCheckedRows.push(index);
+        }
+      });
+  
+      setRows(newRows);
+      setCheckedRows(newCheckedRows);
+  
+      // 포커스 이동
+      const firstCheckedIndex = newCheckedRows[0];
+      if (firstCheckedIndex !== undefined) {
+        const element = document.getElementById("index" + firstCheckedIndex);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }
+    };
+  
+    const handleMoveDown = () => {
+      if (rows.length === 0) return;
+  
+      const newRows = [...rows];
+      const newCheckedRows = [];
+  
+      checkedRows.slice().reverse().forEach(index => {
+        if (index < newRows.length - 1) {
+          const temp = newRows[index];
+          newRows[index] = newRows[index + 1];
+          newRows[index + 1] = temp;
+  
+          newCheckedRows.unshift(index + 1);
+        } else {
+          newCheckedRows.unshift(index);
+        }
+      });
+  
+      setRows(newRows);
+      setCheckedRows(newCheckedRows);
+  
+      // 포커스 이동
+      const firstCheckedIndex = newCheckedRows[0];
+      if (firstCheckedIndex !== undefined) {
+        const element = document.getElementById("index" + firstCheckedIndex);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }
+    };
 
     // 포커스 이동
-
-      newCheckedRows.some(index => {
-        let idx = "index" + index;
-        const element = document.getElementById(idx);
-        if(element){
-          element.scrollIntoView({ behavior: "smooth", block: "center" });
-          return true;
-        }
-        return false;
-      });
+    const firstCheckedIndex = newCheckedRows[0];
+    if (firstCheckedIndex !== undefined) {
+      const element = document.getElementById("index" + firstCheckedIndex);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }
   };
+
   const handleMoveDown = () => {
     if (rows.length === 0) return;
-  
+
     const newRows = [...rows];
+    const newCheckedRows = [];
+
     checkedRows.slice().reverse().forEach(index => {
       if (index < newRows.length - 1) {
         const temp = newRows[index];
         newRows[index] = newRows[index + 1];
         newRows[index + 1] = temp;
+
+        newCheckedRows.unshift(index + 1);
+      } else {
+        newCheckedRows.unshift(index);
       }
     });
-  
+
     setRows(newRows);
-  
-    const newCheckedRows = checkedRows.map(index => index + 1);
     setCheckedRows(newCheckedRows);
-  
+
     // 포커스 이동
-    newCheckedRows.some(index => {
-      let idx = "index" + index;
-      const element = document.getElementById(idx);
+    const firstCheckedIndex = newCheckedRows[0];
+    if (firstCheckedIndex !== undefined) {
+      const element = document.getElementById("index" + firstCheckedIndex);
       if (element) {
         element.scrollIntoView({ behavior: "smooth", block: "center" });
-        return true;
       }
-      return false;
-    });
+    }
   };
 
   return (
@@ -153,11 +208,6 @@ export default function TableButton() {
             <path d="M440-800v487L216-537l-56 57 320 320 320-320-56-57-224 224v-487h-80Z" />
           </svg>
         </div>
-        {/* <form onSubmit={handleSubmit}>
-        <input type="file" accept=".csv" onChange={onChange} />
-        <button type="submit">Upload</button>
-      </form>
-      <Link href="/manage-plan/modal">모달 띄우기</Link> */}
 
         <div className="ml-4 mr-4 text-gray-300">|</div>
 

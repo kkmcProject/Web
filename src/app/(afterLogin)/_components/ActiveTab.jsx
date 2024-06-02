@@ -5,49 +5,37 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/mousewheel";
 import Swiper from "swiper";
+import { useShallow } from "zustand/react/shallow";
+import { useWorkGroup } from "@/store/WorkGroup";
+import { useTableData } from "@/store/TableData";
 
 export default function ActiveTab() {
-  const [activeTab, setActiveTab] = useState("전체");
+  const { workGroup, setWorkGroup } = useWorkGroup(
+    useShallow(state => ({
+      workGroup : state.workGroup,
+      setWorkGroup: state.setWorkGroup,
+    })),
+  );
+  const { setCheckedRows } = useTableData(
+    useShallow(state => ({
+      setCheckedRows: state.setCheckedRows,
+    }))
+  )
   const defaultData = {
     전체: [
-      [
-        "노브랜드",
-        "라임",
-        "200과",
-        "멕시코",
-        "팩",
-        "200 팩 3",
-        "4",
-        "0",
-        "재고 111",
-        "8",
-        "8",
-        "111111111111",
-        "라임(3입/팩)",
-      ],
-      [
-        "노브랜드",
-        "오렌지",
-        "100과",
-        "미국",
-        "팩",
-        "100 팩 2",
-        "2",
-        "0",
-        "재고 50",
-        "4",
-        "4",
-        "222222222222",
-        "라임(3입/팩)",
-      ],
+      [],
     ],
-    세척반: [],
-    "1반": [],
-    "2반": [],
-    "3반": [],
-    "4반": [],
-    "5반": [],
+    "Group1": [],
+    "Group2": [],
+    "Group3": [],
+    "Group4": [],
   };
+  const handleTabClick = tab => () => {
+    setWorkGroup(tab);
+    if(tab !== workGroup){
+      setCheckedRows([]);
+    }
+  }
 
   useEffect(() => {
     const swiper = new Swiper(".swiper", {
@@ -72,8 +60,8 @@ export default function ActiveTab() {
         {Object.keys(defaultData).map(tab => (
           <button
             key={tab}
-            className={`swiper-slide text-center py-2 px-4 border border-gray-300 whitespace-nowrap ${activeTab === tab ? "bg-blue-500 text-white" : "bg-white"}`}
-            onClick={() => setActiveTab(tab)}
+            className={`swiper-slide text-center py-2 px-4 border border-gray-300 whitespace-nowrap ${workGroup === tab ? "bg-blue-500 text-white" : "bg-white"}`}
+            onClick={handleTabClick(tab)}
           >
             {tab}
           </button>

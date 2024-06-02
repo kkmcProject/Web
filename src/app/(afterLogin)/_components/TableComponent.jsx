@@ -5,19 +5,24 @@ import React, { useEffect, useState } from "react";
 
 import { useShallow } from "zustand/react/shallow";
 import { useTableData } from "@/store/TableData";
+import { useWorkGroup } from "@/store/WorkGroup";
 
 export default function TableComponent() {
-  const { rows, checkedRows, setRows, setCheckedRows, rowRefs, setRowRefs } = useTableData(
+  const [ActiveTabRows, setActiveTabRows] = useState([]);
+  const { rows, checkedRows, setRows, setCheckedRows } = useTableData(
     useShallow(state => ({
       rows: state.rows,
       checkedRows: state.checkedRows,
       setRows: state.setRows,
       setCheckedRows: state.setCheckedRows,
-      rowRefs: state.rowRefs,
-      setRowRefs: state.setRowRefs,
     })),
   );
 
+  const { workGroup } = useWorkGroup(
+    useShallow(state => ({
+      workGroup: state.workGroup,
+    }))
+  )
 
   const pathname = usePathname();
   const checkPathname = pathname === "/manage-plan" || pathname === "/manage-plan/modal";
@@ -28,8 +33,8 @@ export default function TableComponent() {
   const handleCheck = index => {
     let newCheckedRows = [...checkedRows];
 
-    if (newCheckedRows.includes(index)) {
-      return newCheckedRows.filter(i => i !== index);
+    if (checkedRows.includes(index)) {
+      newCheckedRows = newCheckedRows.filter(i => i !== index);
     }
     else {
       newCheckedRows = [...newCheckedRows, index];
@@ -43,6 +48,12 @@ export default function TableComponent() {
   if (!checkPathname) headers.shift();
 
 
+  useEffect(() => {
+    const TempRows = workGroup === "전체" ? rows : rows.filter(row => row.workGroup === workGroup);
+    setActiveTabRows(TempRows);
+    console.log('ActiveTabRows는 ', ActiveTabRows)
+  }, [workGroup, rows])
+  
   return (
     <div className="w-full">
       <div className="w-full flex items-center"></div>
@@ -57,9 +68,17 @@ export default function TableComponent() {
           </tr>
         </thead>
         <tbody>
-
-        { rows && 
-            rows.map((row, rowIndex) => (
+        {
+          !ActiveTabRows|| ActiveTabRows.length === 0 && (
+            <tr>
+            <td colSpan={headers.length} className="py-2 px-4 text-center">
+              데이터 없음
+            </td>
+          </tr>
+          ) 
+        }
+        { ActiveTabRows && ActiveTabRows.length > 0 &&
+            ActiveTabRows.map((row, rowIndex) => (
               <tr key={rowIndex} id={'index' + rowIndex} className="hover:bg-gray-100">
                 {checkPathname && (
                   <td className="py-2 px-4 border border-gray-300 text-center">
@@ -79,8 +98,6 @@ export default function TableComponent() {
               </tr>
             ))
         }     
-          
-
         </tbody>
       </table>
     </div>
