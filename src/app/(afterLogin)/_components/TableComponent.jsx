@@ -8,6 +8,7 @@ import { useTableData } from "@/store/TableData";
 import { useWorkGroup } from "@/store/WorkGroup";
 
 export default function TableComponent() {
+  const [headers, setHeaders] = useState([]);
   const [ActiveTabRows, setActiveTabRows] = useState([]);
   const { rows, checkedRows, setRows, setCheckedRows } = useTableData(
     useShallow(state => ({
@@ -22,45 +23,42 @@ export default function TableComponent() {
     useShallow(state => ({
       workGroup: state.workGroup,
     }))
-  )
+  );
 
   const pathname = usePathname();
   const checkPathname = pathname === "/manage-plan" || pathname === "/manage-plan/modal";
-
-  
-  const RowKeys = rows.length > 0 && rows[0] ? Object.keys(rows[0]) : [];
-  const headers = rows.length > 0 ? ["체크", ...RowKeys] : [];
 
   const handleCheck = index => {
     let newCheckedRows = [...checkedRows];
 
     if (checkedRows.includes(index)) {
       newCheckedRows = newCheckedRows.filter(i => i !== index);
-    }
-    else {
+    } else {
       newCheckedRows = [...newCheckedRows, index];
     }
 
     setCheckedRows(newCheckedRows);
-
   };
-
-  // checkPathname 안의 경로가 아니라면 첫번째("체크")항목 제거
-  if (!checkPathname) headers.shift();
 
 
   const handleInputChange = (originIndex, key, value) => {
-    let newRows = [...rows];
+    let newRows = [...rows[workGroup]];
     newRows[originIndex][key] = value;
-    setRows(newRows);
+    setRows({ ...rows, [workGroup]: newRows });
   };
 
   useEffect(() => {
-    const TempRows = workGroup === "전체" ? rows : rows.filter(row => row.workGroup === workGroup);
-    setActiveTabRows(TempRows);
-    console.log('ActiveTabRows는 ', ActiveTabRows)
-  }, [workGroup, rows])
-  
+    // 현재 workGroup에 따라 ActiveTabRows 설정
+    console.log('현재 rows는', rows);
+    const RowKeys = rows[workGroup].length > 0 && rows[workGroup][0] ? Object.keys(rows[workGroup][0]) : [];
+    const newHeaders = rows[workGroup].length > 0 ? ["체크", ...RowKeys] : [];
+    if (!checkPathname) newHeaders.shift();
+
+    setHeaders(newHeaders);
+    setActiveTabRows(rows[workGroup] || rows["전체"] || []);
+    // checkPathname 안의 경로가 아니라면 첫번째("체크")항목 제거
+    
+  }, [workGroup, rows]);
 
   return (
     <div className="w-full">
@@ -76,26 +74,21 @@ export default function TableComponent() {
           </tr>
         </thead>
         <tbody>
-        {
-          !ActiveTabRows|| ActiveTabRows.length === 0 && (
+          {!ActiveTabRows || ActiveTabRows.length === 0 ? (
             <tr>
-            <td colSpan={headers.length} className="py-2 px-4 text-center">
-              데이터 없음
-            </td>
-          </tr>
-          ) 
-        }
-        { ActiveTabRows && ActiveTabRows.length > 0 &&
-
+              <td colSpan={headers.length} className="py-2 px-4 text-center">
+                데이터 없음
+              </td>
+            </tr>
+          ) : (
             ActiveTabRows.map((row, rowIndex) => (
-
               <tr key={rowIndex} id={'index' + rowIndex} className="hover:bg-gray-100">
                 {checkPathname && (
                   <td className="py-2 px-4 border border-gray-300 text-center">
                     <input
                       type="checkbox"
-                      checked={checkedRows.includes(rows.indexOf(row))}
-                      onChange={() => handleCheck(rows.indexOf(row))}
+                      checked={checkedRows.includes(rows[workGroup].indexOf(row))}
+                      onChange={() => handleCheck(rows[workGroup].indexOf(row))}
                     />
                   </td>
                 )}
@@ -104,14 +97,14 @@ export default function TableComponent() {
                   <td key={key} className="py-2 px-4 border border-gray-300 w-full">
                     <input
                       type="text"
-                      value = {row[key]}
-                      onChange= {(e) => handleInputChange(rows.indexOf(row), key, e.target.value)}
+                      value={row[key]}
+                      onChange={(e) => handleInputChange(rows[workGroup].indexOf(row), key, e.target.value)}
                       className="bg-transparent border-none focus:outline-none w-fit"/>
                   </td>
                 ))}
               </tr>
             ))
-        }     
+          )}
         </tbody>
       </table>
     </div>

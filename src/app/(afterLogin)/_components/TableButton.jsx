@@ -69,7 +69,20 @@ export default function TableButton() {
           ...row,
           workGroup: groups[Math.floor(Math.random() * groups.length)],
         }));
-        setRows(resultData);
+       
+        console.log(resultData);
+        const grouped = resultData.reduce((acc, row) => {
+          const group = row.workGroup || "전체";
+          if (!acc[group]) {
+            acc[group] = [];
+          }
+          acc["전체"] = acc["전체"] || [];
+          acc["전체"].push(row);
+          acc[group].push(row);
+          return acc;
+        }, {});
+
+        setRows(grouped);
       },
     });
   };
@@ -79,7 +92,7 @@ export default function TableButton() {
   const handleMoveUp = () => {
     if (rows.length === 0) return;
 
-    const newRows = [...rows];
+    const newRows = [...rows[workGroup]];
     const newCheckedRows = [];
 
     checkedRows.forEach(index => {
@@ -94,7 +107,7 @@ export default function TableButton() {
       }
     });
 
-    setRows(newRows);
+    setRows({...rows, [workGroup]: newRows});
     setCheckedRows(newCheckedRows);
 
     const firstCheckedIndex = newCheckedRows[0];
@@ -107,30 +120,30 @@ export default function TableButton() {
   };
   const handleMoveDown = () => {
     if (rows.length === 0) return;
-
-    const newRows = [...rows];
+  
+    const newRows = [...rows[workGroup]];
     const newCheckedRows = [];
-
-    checkedRows.slice().reverse().forEach(index => {
-      const filteredRowsLength = newRows.filter(row => row.workGroup === workGroup).length;
-      if (index < filteredRowsLength - 1) {
+  
+    // 역순으로 순회하여 체크된 행을 아래로 이동
+    for (let i = checkedRows.length - 1; i >= 0; i--) {
+      const index = checkedRows[i];
+      if (index < newRows.length - 1) {
         const temp = newRows[index];
         newRows[index] = newRows[index + 1];
         newRows[index + 1] = temp;
-
+  
         newCheckedRows.push(index + 1);
       } else {
         newCheckedRows.push(index);
       }
-    });
-
-    setRows(newRows);
+    }
+  
+    setRows({ ...rows, [workGroup]: newRows });
     setCheckedRows(newCheckedRows);
-
-    // 포커스 이동
-    const firstCheckedIndex = newCheckedRows[0];
-    if (firstCheckedIndex !== undefined) {
-      const element = document.getElementById("index" + firstCheckedIndex);
+  
+    const lastCheckedIndex = newCheckedRows[newCheckedRows.length - 1];
+    if (lastCheckedIndex !== undefined) {
+      const element = document.getElementById("index" + lastCheckedIndex);
       if (element) {
         element.scrollIntoView({ behavior: "smooth", block: "center" });
       }
@@ -138,8 +151,8 @@ export default function TableButton() {
   };
   
   const handleAddClick = () => {
-    const newRows = {'workGroup' : workGroup};
-    setRows([...rows, newRows]);
+    const newRows = [...rows[workGroup], {'workGroup': workGroup}];
+    setRows({...rows, [workGroup]: newRows});
   }
   return (
     <div className="Button flex swiper overflow-hidden h-full items-center">
