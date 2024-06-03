@@ -6125,6 +6125,9 @@ __metadata:
     eslint-plugin-react: "npm:^7.34.1"
     express: "npm:^4.19.2"
     globals: "npm:^15.2.0"
+    loadsh: "npm:^0.0.4"
+    lodash: "npm:^4.17.21"
+    lodash.debounce: "npm:^4.0.8"
     msw: "npm:2.1"
     next: "npm:14.2.3"
     next-auth: "npm:^5.0.0-beta.18"
@@ -6206,6 +6209,13 @@ __metadata:
     emojis-list: "npm:^3.0.0"
     json5: "npm:^2.1.2"
   checksum: 10c0/d5654a77f9d339ec2a03d88221a5a695f337bf71eb8dea031b3223420bb818964ba8ed0069145c19b095f6c8b8fd386e602a3fc7ca987042bd8bb1dcc90d7100
+  languageName: node
+  linkType: hard
+
+"loadsh@npm:^0.0.4":
+  version: 0.0.4
+  resolution: "loadsh@npm:0.0.4"
+  checksum: 10c0/d2f651d98736ada698b0beb679f892423e701a0c65dd2bdd374498e3bd1c8d2326d67fb7adf6ee73295d245772d8c3eaf7e5bac3523774cc231f44025701c3c5
   languageName: node
   linkType: hard
 

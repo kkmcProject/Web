@@ -27,6 +27,7 @@ export default function TableComponent() {
   const pathname = usePathname();
   const checkPathname = pathname === "/manage-plan" || pathname === "/manage-plan/modal";
 
+  
   const RowKeys = rows.length > 0 && rows[0] ? Object.keys(rows[0]) : [];
   const headers = rows.length > 0 ? ["체크", ...RowKeys] : [];
 
@@ -48,20 +49,27 @@ export default function TableComponent() {
   if (!checkPathname) headers.shift();
 
 
+  const handleInputChange = (originIndex, key, value) => {
+    let newRows = [...rows];
+    newRows[originIndex][key] = value;
+    setRows(newRows);
+  };
+
   useEffect(() => {
     const TempRows = workGroup === "전체" ? rows : rows.filter(row => row.workGroup === workGroup);
     setActiveTabRows(TempRows);
     console.log('ActiveTabRows는 ', ActiveTabRows)
   }, [workGroup, rows])
   
+
   return (
     <div className="w-full">
       <div className="w-full flex items-center"></div>
-      <table className="min-w-full max-w-full w-fulloverflow-y-scroll whitespace-nowrap">
+      <table className="min-w-full max-w-full w-full overflow-y-scroll table-auto">
         <thead>
           <tr>
             {headers.map((header, index) => (
-              <th key={index} className="py-2 px-4 border border-gray-300 bg-gray-200 text-gray-600">
+              <th key={index} className="py-2 px-4 border border-gray-300 bg-gray-200 text-gray-600 whitespace-nowrap">
                 {header}
               </th>
             ))}
@@ -78,21 +86,27 @@ export default function TableComponent() {
           ) 
         }
         { ActiveTabRows && ActiveTabRows.length > 0 &&
+
             ActiveTabRows.map((row, rowIndex) => (
+
               <tr key={rowIndex} id={'index' + rowIndex} className="hover:bg-gray-100">
                 {checkPathname && (
                   <td className="py-2 px-4 border border-gray-300 text-center">
                     <input
                       type="checkbox"
-                      checked={checkedRows.includes(rowIndex)}
-                      onChange={() => handleCheck(rowIndex)}
+                      checked={checkedRows.includes(rows.indexOf(row))}
+                      onChange={() => handleCheck(rows.indexOf(row))}
                     />
                   </td>
                 )}
 
                 {Object.keys(row).map(key => (
-                  <td key={key} className="py-2 px-4 border border-gray-300">
-                    {row[key]}
+                  <td key={key} className="py-2 px-4 border border-gray-300 w-full">
+                    <input
+                      type="text"
+                      value = {row[key]}
+                      onChange= {(e) => handleInputChange(rows.indexOf(row), key, e.target.value)}
+                      className="bg-transparent border-none focus:outline-none w-fit"/>
                   </td>
                 ))}
               </tr>

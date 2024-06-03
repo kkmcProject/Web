@@ -2205,6 +2205,10 @@ const RAW_RUNTIME_STATE =
       "npm:2.0.4"\
     ],\
     [\
+      "loadsh",\
+      "npm:0.0.4"\
+    ],\
+    [\
       "locate-path",\
       "npm:6.0.0"\
     ],\
@@ -3526,6 +3530,9 @@ const RAW_RUNTIME_STATE =
           ["eslint-plugin-react", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:7.34.1"],\
           ["express", "npm:4.19.2"],\
           ["globals", "npm:15.2.0"],\
+          ["loadsh", "npm:0.0.4"],\
+          ["lodash", "npm:4.17.21"],\
+          ["lodash.debounce", "npm:4.0.8"],\
           ["msw", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:2.1.7"],\
           ["next", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:14.2.3"],\
           ["next-auth", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:5.0.0-beta.18"],\
@@ -11585,6 +11592,9 @@ const RAW_RUNTIME_STATE =
           ["eslint-plugin-react", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:7.34.1"],\
           ["express", "npm:4.19.2"],\
           ["globals", "npm:15.2.0"],\
+          ["loadsh", "npm:0.0.4"],\
+          ["lodash", "npm:4.17.21"],\
+          ["lodash.debounce", "npm:4.0.8"],\
           ["msw", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:2.1.7"],\
           ["next", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:14.2.3"],\
           ["next-auth", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:5.0.0-beta.18"],\
@@ -11677,6 +11687,15 @@ const RAW_RUNTIME_STATE =
           ["big.js", "npm:5.2.2"],\
           ["emojis-list", "npm:3.0.0"],\
           ["json5", "npm:2.2.3"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["loadsh", [\
+      ["npm:0.0.4", {\
+        "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/loadsh-npm-0.0.4-ef943d755a-10c0.zip/node_modules/loadsh/",\
+        "packageDependencies": [\
+          ["loadsh", "npm:0.0.4"]\
         ],\
         "linkType": "HARD"\
       }]\

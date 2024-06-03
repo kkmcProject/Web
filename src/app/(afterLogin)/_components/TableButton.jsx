@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import Papa from "papaparse";
 import { useShallow } from "zustand/react/shallow";
 import { useTableData } from "@/store/TableData";
+import { useWorkGroup } from "@/store/WorkGroup";
 
 export default function TableButton() {
   const { rows, setRows, checkedRows, setCheckedRows } = useTableData(
@@ -18,6 +19,9 @@ export default function TableButton() {
       setCheckedRows: state.setCheckedRows,
     })),
   );
+  const {workGroup} = useWorkGroup(
+    useShallow(state => ({workGroup: state.workGroup})
+  ))
   const [filename, setFilename] = useState("");
 
   useEffect(() => {
@@ -92,69 +96,7 @@ export default function TableButton() {
 
     setRows(newRows);
     setCheckedRows(newCheckedRows);
-    const handleMoveUp = () => {
-      if (rows.length === 0) return;
-  
-      const newRows = [...rows];
-      const newCheckedRows = [];
-  
-      checkedRows.forEach(index => {
-        if (index > 0) {
-          const temp = newRows[index];
-          newRows[index] = newRows[index - 1];
-          newRows[index - 1] = temp;
-  
-          newCheckedRows.push(index - 1);
-        } else {
-          newCheckedRows.push(index);
-        }
-      });
-  
-      setRows(newRows);
-      setCheckedRows(newCheckedRows);
-  
-      // 포커스 이동
-      const firstCheckedIndex = newCheckedRows[0];
-      if (firstCheckedIndex !== undefined) {
-        const element = document.getElementById("index" + firstCheckedIndex);
-        if (element) {
-          element.scrollIntoView({ behavior: "smooth", block: "center" });
-        }
-      }
-    };
-  
-    const handleMoveDown = () => {
-      if (rows.length === 0) return;
-  
-      const newRows = [...rows];
-      const newCheckedRows = [];
-  
-      checkedRows.slice().reverse().forEach(index => {
-        if (index < newRows.length - 1) {
-          const temp = newRows[index];
-          newRows[index] = newRows[index + 1];
-          newRows[index + 1] = temp;
-  
-          newCheckedRows.unshift(index + 1);
-        } else {
-          newCheckedRows.unshift(index);
-        }
-      });
-  
-      setRows(newRows);
-      setCheckedRows(newCheckedRows);
-  
-      // 포커스 이동
-      const firstCheckedIndex = newCheckedRows[0];
-      if (firstCheckedIndex !== undefined) {
-        const element = document.getElementById("index" + firstCheckedIndex);
-        if (element) {
-          element.scrollIntoView({ behavior: "smooth", block: "center" });
-        }
-      }
-    };
 
-    // 포커스 이동
     const firstCheckedIndex = newCheckedRows[0];
     if (firstCheckedIndex !== undefined) {
       const element = document.getElementById("index" + firstCheckedIndex);
@@ -163,7 +105,6 @@ export default function TableButton() {
       }
     }
   };
-
   const handleMoveDown = () => {
     if (rows.length === 0) return;
 
@@ -171,14 +112,15 @@ export default function TableButton() {
     const newCheckedRows = [];
 
     checkedRows.slice().reverse().forEach(index => {
-      if (index < newRows.length - 1) {
+      const filteredRowsLength = newRows.filter(row => row.workGroup === workGroup).length;
+      if (index < filteredRowsLength - 1) {
         const temp = newRows[index];
         newRows[index] = newRows[index + 1];
         newRows[index + 1] = temp;
 
-        newCheckedRows.unshift(index + 1);
+        newCheckedRows.push(index + 1);
       } else {
-        newCheckedRows.unshift(index);
+        newCheckedRows.push(index);
       }
     });
 
@@ -194,7 +136,11 @@ export default function TableButton() {
       }
     }
   };
-
+  
+  const handleAddClick = () => {
+    const newRows = {'workGroup' : workGroup};
+    setRows([...rows, newRows]);
+  }
   return (
     <div className="Button flex swiper overflow-hidden h-full items-center">
       <div className="w-full flex text-nowrap swiper-wrapper h-full items-center ">
@@ -223,7 +169,7 @@ export default function TableButton() {
             </svg>
           </label>
         </div>
-        <div className="add hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide">
+        <div className="add hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide" onClick={handleAddClick}>
           <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
             <path d="M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
           </svg>
