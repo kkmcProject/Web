@@ -11,12 +11,13 @@ import { useTableData } from "@/store/TableData";
 import { useWorkGroup } from "@/store/WorkGroup";
 
 export default function TableButton() {
-  const { rows, setRows, checkedRows, setCheckedRows } = useTableData(
+  const { rows, setRows, checkedRows, setCheckedRows, headers } = useTableData(
     useShallow(state => ({
       rows: state.rows,
       setRows: state.setRows,
       checkedRows: state.checkedRows,
       setCheckedRows: state.setCheckedRows,
+      headers: state.headers,
     })),
   );
   const {workGroup} = useWorkGroup(
@@ -151,8 +152,23 @@ export default function TableButton() {
   };
   
   const handleAddClick = () => {
-    const newRows = [...rows[workGroup], {'workGroup': workGroup}];
-    setRows({...rows, [workGroup]: newRows});
+    if(rows && rows[workGroup]){
+      const workGroupRows = rows[workGroup] || [];
+      const RowKeys = workGroupRows.length > 0 && workGroupRows[0] ? Object.keys(workGroupRows[0]) : [];
+      
+      const newRows = [...rows[workGroup], {...RowKeys}];
+      setRows({...rows, [workGroup]: newRows,});
+
+      // 포커싱
+      setTimeout(() => {
+        const lastIndex = newRows.length - 1;
+        const element = document.getElementById("index" + lastIndex);
+        if(element){
+          element.scrollIntoView({behavior: "smooth", block: "center"});
+          element.focus();
+        }
+      }, 0)
+    }
   }
   return (
     <div className="Button flex swiper overflow-hidden h-full items-center">
