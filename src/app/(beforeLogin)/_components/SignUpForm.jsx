@@ -4,9 +4,22 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import InputBox from "./InputBox";
+import { z } from "zod";
+
+
+const SignUpSchema = z.object({
+  id: z.string().min(1, "아이디를 입력해주세요."),
+  name: z.string().min(1, "이름을 입력해주세요."),
+  password: z.string().min(12, "비밀번호는 최소 12자 이상이어야 합니다."),
+  confirmPassword: z.string().min(12, "비밀번호 확인은 최소 12자 이상이어야 합니다."),
+  position: z.string().optional(),
+  class: z.string().optional(),
+}).refine(data => data.password === data.confirmPassword, {
+  message: "비밀번호가 일치하지 않습니다.",
+  path: ["confirmPassword"],
+});
 
 export default function SignUpForm() {
-  const [message, setMessage] = useState("");
   const router = useRouter();
   const [formData, setFormData] = useState({
     id: "",
@@ -20,8 +33,10 @@ export default function SignUpForm() {
   const onSubmit = async e => {
     e.preventDefault();
 
-    if (formData.password !== formData.confirmPassword) {
-      alert("비밀번호가 일치하지 않습니다.");
+
+    const validation = SignUpSchema.safeParse(formData);
+    if (!validation.success) {
+      alert(validation.error.errors[0].message);
       return;
     }
 
@@ -32,7 +47,8 @@ export default function SignUpForm() {
     });
     console.log(response.status);
     if (response.status === 500) {
-      setMessage("이미 존재하는 아이디입니다.");
+      alert("이미 존재하는 아이디입니다.");
+      return;
     }
     if (!response.ok) {
       return null;
@@ -40,7 +56,9 @@ export default function SignUpForm() {
     let user = await response.json();
     router.replace("/flow/login");
   };
-  useEffect(() => {}, [message]);
+
+  useEffect(() => {}, []);
+
   return (
     <form style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }} onSubmit={onSubmit}>
       <InputBox type="text" id="id" name="id" placeholder="아이디" formData={formData} setFormData={setFormData} />
@@ -77,7 +95,6 @@ export default function SignUpForm() {
         formData={formData}
         setFormData={setFormData}
       />
-      <div className="text-red-600 mb-4">{message}</div>
       <button
         type="submit"
         style={{
