@@ -296,7 +296,7 @@ export default function TableButton() {
           </svg>
         </div>
       </div>
-      <input type="file" id="load-file" accept=".csv" onChange={handleLoad} className="hidden" />
+      <input type="file" id="load-file" accept=".xlsx" onChange={handleLoad} className="hidden" />
     </div>
   );
 }

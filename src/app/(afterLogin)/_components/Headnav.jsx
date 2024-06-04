@@ -31,6 +31,7 @@ export default function Headnav() {
           </div>
         </div>
       </div>
+
       {/* Tablet 크기 이상일 때만 보이는 네비게이션 바 */}
       <div className="hidden tablet:block h-14 ">
         <div className="h-full flex justify-start items-center text-lg text-white">
@@ -52,19 +53,24 @@ export default function Headnav() {
         </div>
       </div>
 
-      {/*테블릿 이상일 때 보여줄 탭과 버튼 */}
-      <div className="flex border-b-2 w-full border-gray-100 zero-to-tablet:hidden mt-2 justify-between items-center mb-2">
-        <ActiveTab />
+      {pathname !== "/change-info" && (
+  <>
+    {/* 테블릿 이상일 때 보여줄 탭과 버튼 */}
+    <div className="flex border-b-2 w-full border-gray-100 zero-to-tablet:hidden mt-2 justify-between items-center mb-2">
+      <ActiveTab />
+      <TableButton />
+    </div>
+
+    {/* 테블릿 이하일 때 보여줄 탭과 버튼 */}
+    <div className="border-b-2 border-gray-100 tablet:hidden w-full">
+      <ActiveTab />
+      <div className="mt-2 mb-2 w-full">
         <TableButton />
       </div>
+    </div>
+  </>
+)}
 
-      {/*테블릿 이하일 때 보여줄 탭과 버튼 */}
-      <div className="border-b-2 border-gray-100 tablet:hidden w-full">
-        <ActiveTab />
-        <div className="mt-2 mb-2 w-full">
-          <TableButton />
-        </div>
-      </div>
     </div>
   );
 }

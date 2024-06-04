@@ -114,7 +114,7 @@ function UserPage({ userId }) {
   };
 
   return (
-    <div className="container">
+    <div className="container mt-40">
       <div className="profile-section">
         <h1 className="section-title">직원 profile</h1>
         <ProfileCard title="이름" content={userData.name} />

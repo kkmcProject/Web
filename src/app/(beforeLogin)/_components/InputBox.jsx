@@ -14,7 +14,6 @@ export default function InputBox({ type, id, name, placeholder, formData, setFor
       id={id}
       name={name}
       placeholder={placeholder}
-      required
       className="mb-3 p-2 bg-input-bg w-4/5 border border-input-border text-black"
       onChange={handleChange}
     ></input>
