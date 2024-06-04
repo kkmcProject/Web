@@ -893,6 +893,10 @@ const RAW_RUNTIME_STATE =
       "npm:8.3.2"\
     ],\
     [\
+      "adler-32",\
+      "npm:1.3.1"\
+    ],\
+    [\
       "agent-base",\
       "npm:7.1.1"\
     ],\
@@ -1137,6 +1141,10 @@ const RAW_RUNTIME_STATE =
       "npm:1.0.30001614"\
     ],\
     [\
+      "cfb",\
+      "npm:1.2.2"\
+    ],\
+    [\
       "chalk",\
       "npm:4.1.2"\
     ],\
@@ -1195,6 +1203,10 @@ const RAW_RUNTIME_STATE =
     [\
       "code-block-writer",\
       "npm:10.1.1"\
+    ],\
+    [\
+      "codepage",\
+      "npm:1.15.0"\
     ],\
     [\
       "color-convert",\
@@ -1259,6 +1271,10 @@ const RAW_RUNTIME_STATE =
     [\
       "cors",\
       "npm:2.8.5"\
+    ],\
+    [\
+      "crc-32",\
+      "npm:1.2.2"\
     ],\
     [\
       "create-require",\
@@ -1723,6 +1739,10 @@ const RAW_RUNTIME_STATE =
     [\
       "forwarded",\
       "npm:0.2.0"\
+    ],\
+    [\
+      "frac",\
+      "npm:1.1.2"\
     ],\
     [\
       "fraction.js",\
@@ -2977,6 +2997,10 @@ const RAW_RUNTIME_STATE =
       "npm:1.1.3"\
     ],\
     [\
+      "ssf",\
+      "npm:0.11.2"\
+    ],\
+    [\
       "ssri",\
       "npm:10.0.5"\
     ],\
@@ -3363,6 +3387,14 @@ const RAW_RUNTIME_STATE =
       "npm:1.1.5"\
     ],\
     [\
+      "wmf",\
+      "npm:1.0.2"\
+    ],\
+    [\
+      "word",\
+      "npm:0.3.0"\
+    ],\
+    [\
       "word-wrap",\
       "npm:1.2.5"\
     ],\
@@ -3462,6 +3494,10 @@ const RAW_RUNTIME_STATE =
       "npm:7.3.0"\
     ],\
     [\
+      "xlsx",\
+      "npm:0.18.5"\
+    ],\
+    [\
       "xtend",\
       "npm:4.0.2"\
     ],\
@@ -3548,6 +3584,7 @@ const RAW_RUNTIME_STATE =
           ["swiper", "npm:11.1.4"],\
           ["tailwindcss", "npm:3.4.3"],\
           ["vercel", "npm:34.2.1"],\
+          ["xlsx", "npm:0.18.5"],\
           ["zustand", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:4.5.2"]\
         ],\
         "linkType": "SOFT"\
@@ -7284,6 +7321,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["adler-32", [\
+      ["npm:1.3.1", {\
+        "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/adler-32-npm-1.3.1-8493d3a628-10c0.zip/node_modules/adler-32/",\
+        "packageDependencies": [\
+          ["adler-32", "npm:1.3.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["agent-base", [\
       ["npm:6.0.2", {\
         "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/agent-base-npm-6.0.2-428f325a93-10c0.zip/node_modules/agent-base/",\
@@ -8148,6 +8194,17 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["cfb", [\
+      ["npm:1.2.2", {\
+        "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/cfb-npm-1.2.2-df6fc7d448-10c0.zip/node_modules/cfb/",\
+        "packageDependencies": [\
+          ["cfb", "npm:1.2.2"],\
+          ["adler-32", "npm:1.3.1"],\
+          ["crc-32", "npm:1.2.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["chalk", [\
       ["npm:2.4.2", {\
         "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/chalk-npm-2.4.2-3ea16dd91e-10c0.zip/node_modules/chalk/",\
@@ -8343,6 +8400,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["codepage", [\
+      ["npm:1.15.0", {\
+        "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/codepage-npm-1.15.0-bde3a4eb54-10c0.zip/node_modules/codepage/",\
+        "packageDependencies": [\
+          ["codepage", "npm:1.15.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["color-convert", [\
       ["npm:1.9.3", {\
         "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/color-convert-npm-1.9.3-1fe690075e-10c0.zip/node_modules/color-convert/",\
@@ -8524,6 +8590,15 @@ const RAW_RUNTIME_STATE =
           ["cors", "npm:2.8.5"],\
           ["object-assign", "npm:4.1.1"],\
           ["vary", "npm:1.1.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["crc-32", [\
+      ["npm:1.2.2", {\
+        "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/crc-32-npm-1.2.2-28bdc12bcc-10c0.zip/node_modules/crc-32/",\
+        "packageDependencies": [\
+          ["crc-32", "npm:1.2.2"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -10209,6 +10284,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["frac", [\
+      ["npm:1.1.2", {\
+        "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/frac-npm-1.1.2-7e88efac4e-10c0.zip/node_modules/frac/",\
+        "packageDependencies": [\
+          ["frac", "npm:1.1.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["fraction.js", [\
       ["npm:4.3.7", {\
         "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/fraction.js-npm-4.3.7-c2c7e95a8e-10c0.zip/node_modules/fraction.js/",\
@@ -11610,6 +11694,7 @@ const RAW_RUNTIME_STATE =
           ["swiper", "npm:11.1.4"],\
           ["tailwindcss", "npm:3.4.3"],\
           ["vercel", "npm:34.2.1"],\
+          ["xlsx", "npm:0.18.5"],\
           ["zustand", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:4.5.2"]\
         ],\
         "linkType": "SOFT"\
@@ -14251,6 +14336,16 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["ssf", [\
+      ["npm:0.11.2", {\
+        "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/ssf-npm-0.11.2-e6437eb624-10c0.zip/node_modules/ssf/",\
+        "packageDependencies": [\
+          ["ssf", "npm:0.11.2"],\
+          ["frac", "npm:1.1.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["ssri", [\
       ["npm:10.0.5", {\
         "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/ssri-npm-10.0.5-1a7557d04d-10c0.zip/node_modules/ssri/",\
@@ -15506,6 +15601,24 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["wmf", [\
+      ["npm:1.0.2", {\
+        "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/wmf-npm-1.0.2-15d4e3e93c-10c0.zip/node_modules/wmf/",\
+        "packageDependencies": [\
+          ["wmf", "npm:1.0.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["word", [\
+      ["npm:0.3.0", {\
+        "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/word-npm-0.3.0-da20365d4a-10c0.zip/node_modules/word/",\
+        "packageDependencies": [\
+          ["word", "npm:0.3.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["word-wrap", [\
       ["npm:1.2.5", {\
         "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/word-wrap-npm-1.2.5-42d00c4b09-10c0.zip/node_modules/word-wrap/",\
@@ -15833,6 +15946,22 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["xdg-portable", "npm:7.3.0"],\
           ["os-paths", "npm:4.4.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["xlsx", [\
+      ["npm:0.18.5", {\
+        "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/xlsx-npm-0.18.5-f70d417ac6-10c0.zip/node_modules/xlsx/",\
+        "packageDependencies": [\
+          ["xlsx", "npm:0.18.5"],\
+          ["adler-32", "npm:1.3.1"],\
+          ["cfb", "npm:1.2.2"],\
+          ["codepage", "npm:1.15.0"],\
+          ["crc-32", "npm:1.2.2"],\
+          ["ssf", "npm:0.11.2"],\
+          ["wmf", "npm:1.0.2"],\
+          ["word", "npm:0.3.0"]\
         ],\
         "linkType": "HARD"\
       }]\

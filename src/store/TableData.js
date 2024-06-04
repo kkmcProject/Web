@@ -4,9 +4,11 @@ const initialState = {
   rows: [],
   checkedRows: [],
   headers: [],
+  filteredColumns: [],
   setRows: () => {},
   setCheckedRows: () => {},
   setHeaders: () => {},
+  setFilteredColumns: () => {},
 };
 
 export const useTableData = create(set => ({
@@ -14,4 +16,5 @@ export const useTableData = create(set => ({
   setRows: rows => set({ rows }),
   setCheckedRows: checkedRows => set({ checkedRows }),
   setHeaders: headers => set({headers}),
+  setFilteredColumns : () => set({filteredColumns}),
 }));

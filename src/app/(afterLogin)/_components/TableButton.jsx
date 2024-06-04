@@ -9,8 +9,11 @@ import Papa from "papaparse";
 import { useShallow } from "zustand/react/shallow";
 import { useTableData } from "@/store/TableData";
 import { useWorkGroup } from "@/store/WorkGroup";
-
+import clsx from 'clsx';
+import * as XLSX from 'xlsx';
 export default function TableButton() {
+  const defaultSelected = "작업 이동";
+  const [selected , setSelected] = useState(defaultSelected);
   const { rows, setRows, checkedRows, setCheckedRows, headers } = useTableData(
     useShallow(state => ({
       rows: state.rows,
@@ -20,9 +23,13 @@ export default function TableButton() {
       headers: state.headers,
     })),
   );
-  const {workGroup} = useWorkGroup(
-    useShallow(state => ({workGroup: state.workGroup})
-  ))
+  const {workGroup, groups, setGroups} = useWorkGroup(
+    useShallow(state => ({
+      workGroup: state.workGroup, 
+      groups: state.groups, 
+      setGroups: state.setGroups
+    })),
+  );
   const [filename, setFilename] = useState("");
 
   useEffect(() => {
@@ -50,42 +57,67 @@ export default function TableButton() {
     }
     setCheckedRows([]);
     setFilename(file.name);
-
+  
     let readFile = file =>
       new Promise((resolve, reject) => {
         let reader = new FileReader();
         reader.onload = () => resolve(reader.result);
         reader.onerror = error => reject(error);
-
-        reader.readAsText(file);
+        reader.readAsArrayBuffer(file);
       });
-
-    let csvText = await readFile(file);
-
-    Papa.parse(csvText, {
-      header: true,
-      complete: async function (results) {
-        const groups = ["Group1", "Group2", "Group3", "Group4"];
-        const resultData = results.data.map(row => ({
-          ...row,
-          workGroup: groups[Math.floor(Math.random() * groups.length)],
-        }));
-       
-        console.log(resultData);
-        const grouped = resultData.reduce((acc, row) => {
-          const group = row.workGroup || "전체";
-          if (!acc[group]) {
-            acc[group] = [];
-          }
-          acc["전체"] = acc["전체"] || [];
-          acc["전체"].push(row);
-          acc[group].push(row);
-          return acc;
-        }, {});
-
-        setRows(grouped);
-      },
+  
+    let arrayBuffer = await readFile(file);
+    let data = new Uint8Array(arrayBuffer);
+    let workbook = XLSX.read(data, { type: 'array' });
+    let worksheet = workbook.Sheets[workbook.SheetNames[0]];
+    let jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+  
+    // 첫 번째 행(사용자 정의 헤더)을 제외하고 데이터를 가져옵니다.
+    jsonData = jsonData.slice(1);
+  
+    // 사용자 정의 헤더
+    const header = ["품목번호", "업체", "품목", "과수", "원산지", "포장형태", "상품명", "입수", "단량", "특이사항", "수량", "중량", "바코드", "상품명_2", "작업인원", "작업시간(분)", "품종"];
+  
+    // 첫 번째 열에 내용이 없는 행을 제거
+    let filteredData = jsonData.filter(row => row[0] !== undefined && row[0] !== null);
+  
+    // 정의된 헤더 길이에 맞게 데이터를 조정합니다.
+    filteredData = filteredData.map(row => row.slice(0, header.length));
+  
+    // 객체 배열로 변환합니다.
+    let resultData = filteredData.map(row => {
+      let obj = {};
+      header.forEach((key, index) => {
+        obj[key] = row[index];
+      });
+      return obj;
     });
+  
+    // 무작위로 workGroup 할당
+    const groups = ["Group1", "Group2", "Group3", "Group4"];
+    resultData = resultData.map(row => ({
+      ...row,
+      workGroup: groups[Math.floor(Math.random() * groups.length)],
+    }));
+  
+    console.log("Result Data:", resultData);
+  
+    const uniqueGroups = [...new Set(resultData.map(row => row.workGroup))];
+    uniqueGroups.sort();
+    setGroups(uniqueGroups);
+    
+    const grouped = resultData.reduce((acc, row) => {
+      const group = row.workGroup || "전체";
+      if (!acc[group]) {
+        acc[group] = [];
+      }
+      acc["전체"] = acc["전체"] || [];
+      acc["전체"].push(row);
+      acc[group].push(row);
+      return acc;
+    }, {});
+  
+    setRows(grouped);
   };
 
   
@@ -170,6 +202,26 @@ export default function TableButton() {
       }, 0)
     }
   }
+  const confirmDelete = () => {
+    if(checkedRows.length === 0) return alert("삭제할 행을 선택해주세요.");
+    if(confirm("정말 삭제하시겠습니까?")){
+      const newRows = rows[workGroup].filter((_, index) => !checkedRows.includes(index));
+      setRows({...rows, [workGroup]: newRows});
+      setCheckedRows([]);
+      alert("삭제 완료");
+    }
+  }
+  const handleSelect = (e) => {
+    setSelected(e.target.value);
+  }
+  const onClickMoveBtn = () => {
+    const newRows = rows[workGroup].filter((row, index) => !checkedRows.includes(index)); // 선택되지 않은 행, 갱신해줘야할 행.
+    const newGroupRows = rows[selected] || []; // 선택한 작업반의 목록
+    
+    newGroupRows.push(...checkedRows.map(index => rows[workGroup][index])); // 체크된 행을 선택한 작업반에 추가 
+    setRows({...rows, [workGroup]: newRows, [selected]: newGroupRows});
+    setCheckedRows([]);
+  }
   return (
     <div className="Button flex swiper overflow-hidden h-full items-center">
       <div className="w-full flex text-nowrap swiper-wrapper h-full items-center ">
@@ -203,10 +255,42 @@ export default function TableButton() {
             <path d="M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
           </svg>
         </div>
+        <div className="filter hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide ">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+           <path d="M440-120v-240h80v80h320v80H520v80h-80Zm-320-80v-80h240v80H120Zm160-160v-80H120v-80h160v-80h80v240h-80Zm160-80v-80h400v80H440Zm160-160v-240h80v80h160v80H680v80h-80Zm-480-80v-80h400v80H120Z"/>
+          </svg>
+        </div>
 
-        <div className="create ml-5 hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide text-sm">작업 이동</div>
-        <div className="create ml-5 hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide text-sm">작업 할당</div>
-        <div className="delete ml-5 hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide">
+        <div className="ml-2 mr-2 text-gray-300 swiper-slide">|</div>
+        {workGroup !=='전체'  && groups.length > 0 &&
+          <div className="p-1 text-sm">
+            <select onChange={handleSelect} value={selected}>
+              <option value={defaultSelected}>{defaultSelected}</option>
+              {
+                groups.map((group) => {
+                  if(group === workGroup) return ;
+                  return (
+                  <option key={group} value={group}>
+                    {group}
+                  </option>
+                  )})
+              }
+            </select>
+            <button className={clsx("ml-2 p-2", 
+            {
+              "hover:cursor-pointer hover:bg-blue-100" : selected !== defaultSelected,
+              "text-gray-300" : selected === defaultSelected
+            })} onClick={onClickMoveBtn} disabled={selected === defaultSelected}>
+              확인
+            </button>
+          </div>}
+        
+        {workGroup !== '전체' && <div className="ml-2 mr-2 text-gray-300">|</div>  }
+
+          
+        <div className="create hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide text-sm">작업 할당</div>
+        <div className="create ml-2 hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide text-sm">작업 저장</div>
+        <div className="delete ml-2 hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide" onClick={confirmDelete}>
           <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
             <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
           </svg>
