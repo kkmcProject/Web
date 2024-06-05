@@ -11,7 +11,6 @@ const SignUpSchema = z.object({
   id: z.string().min(1, "아이디를 입력해주세요."),
   name: z.string().min(1, "이름을 입력해주세요."),
   password: z.string().min(12, "비밀번호는 최소 12자 이상이어야 합니다."),
-  confirmPassword: z.string().min(12, "비밀번호 확인은 최소 12자 이상이어야 합니다."),
   position: z.string().optional(),
   class: z.string().optional(),
 }).refine(data => data.password === data.confirmPassword, {
