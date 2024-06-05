@@ -51,7 +51,7 @@ export default function TableComponent() {
 
   useEffect(() => {
     // 현재 workGroup에 따라 ActiveTabRows 설정
-    console.log('현재 rows는', rows);
+
     const workGroupRows = rows[workGroup] || [];
     const RowKeys = workGroupRows.length > 0 && workGroupRows[0] ? Object.keys(workGroupRows[0]) : [];
     const newHeaders = workGroupRows.length > 0 ? ["체크", ...RowKeys] : [];
@@ -61,8 +61,7 @@ export default function TableComponent() {
    //  newHeaders = newHeaders.filter(header => !filteredColumns.includes(header));
      setHeaders(newHeaders);
 
-     console.log('filteredColumns', filteredColumns);
-     console.log('workGroupRows', workGroupRows);
+
    // ActiveTabRows에서 필터링된 컬럼을 제외
    const filteredRows = workGroupRows.map(row => {
     const filteredRow = { ...row };
@@ -74,10 +73,6 @@ export default function TableComponent() {
 
     setActiveTabRows(filteredRows.length > 0 ? filteredRows : (rows["전체"] || []));
   }, [workGroup, rows, filteredColumns]);
-
-  useEffect(()=>{
-    console.log('filtered', filteredColumns);
-  }, [filteredColumns])
 
   return (
     <div className="w-full">

@@ -6,6 +6,7 @@ import SideMenuBtn from "./SideMenuBtn";
 import TableButton from "./TableButton";
 import Image from "next/image";
 import ActiveTab from "./ActiveTab";
+import { signOut } from "next-auth/react";
 
 const links = [
   { name: "Home", href: "/", text: "작업계획서 보기" },
@@ -16,11 +17,23 @@ const links = [
 export default function Headnav() {
   const pathname = usePathname();
 
+  const onLogout = () => {
+    signOut();
+  };
+  
   return (
     <div className="w-full ">
-      <div className="tablet:max-w-screen-mobile mt-4 mb-4 zero-to-tablet:flex">
-        <div className="zero-to-tablet:hidden">
+      <div className="mt-4 mb-4 zero-to-tablet:flex">
+        <div className="zero-to-tablet:hidden tablet:flex">
           <Image src="/icons/kkmc_logo.png" width={350} height={80} alt="kkmc 로고" />
+          <div className="flex w-full justify-end items-end">
+            <button className="flex items-center hover:bg-blue-100" onClick={onLogout}>
+              <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#5f6368">
+                <path d="M440-440v-400h80v400h-80Zm40 320q-74 0-139.5-28.5T226-226q-49-49-77.5-114.5T120-480q0-80 33-151t93-123l56 56q-48 40-75 97t-27 121q0 116 82 198t198 82q117 0 198.5-82T760-480q0-64-26.5-121T658-698l56-56q60 52 93 123t33 151q0 74-28.5 139.5t-77 114.5q-48.5 49-114 77.5T480-120Z"/>
+              </svg>
+              <span className="ml-2">로그아웃</span>
+            </button>
+          </div>
         </div>
         <div className="tablet:hidden flex w-full ju tify-between items-center">
           <Image src="/icons/kkmc_logo.png" width={175} height={40} alt="kkmc 로고" />

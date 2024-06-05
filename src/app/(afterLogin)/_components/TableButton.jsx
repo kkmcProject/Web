@@ -107,12 +107,28 @@ export default function TableButton() {
       workGroup: groups[Math.floor(Math.random() * groups.length)],
     }));
 
-    console.log("Result Data:", resultData);
 
+
+    // 품목분류 열 추가.
+
+    const categories = ['키위', '망고', '고구마', '오렌지', '아보카도', '자몽', '레몬', '라임', '체리'];
+
+    resultData = resultData.map(item => {
+      let newColumn = '';
+
+      for (const category of categories){
+        if(item['품목'].includes(category)){
+          newColumn = category;
+          break;
+        }
+      }
+      return { ...item, '품목분류': newColumn };
+    })
+    
     const uniqueGroups = [...new Set(resultData.map(row => row.workGroup))];
     uniqueGroups.sort();
     setGroups(uniqueGroups);
-    console.log('uniqueGroups:', uniqueGroups);
+
     const grouped = resultData.reduce((acc, row) => {
       const group = row.workGroup || "전체";
       if (!acc[group]) {
@@ -131,21 +147,21 @@ export default function TableButton() {
     if (!rows[workGroup] || rows[workGroup].length === 0) return;
   
     const newRows = [...rows[workGroup]];
-    const newCheckedRows = [];
+    const newCheckedRows = checkedRows.slice().sort((a, b) => a - b);
   
-    checkedRows.forEach(index => {
-      if (index > 0) {
+    // Traverse each checked row and move it up
+    for (let i = 0; i < newCheckedRows.length; i++) {
+      const index = newCheckedRows[i];
+      if (index > 0 && !newCheckedRows.includes(index - 1)) {
         // Swap elements
         const temp = newRows[index];
         newRows[index] = newRows[index - 1];
         newRows[index - 1] = temp;
   
-        // Adjust the checked rows indices
-        newCheckedRows.push(index - 1);
-      } else {
-        newCheckedRows.push(index);
+        // Update the checkedRows with new positions
+        newCheckedRows[i] = index - 1;
       }
-    });
+    }
   
     setRows({ ...rows, [workGroup]: newRows });
     setCheckedRows(newCheckedRows);
@@ -163,21 +179,19 @@ export default function TableButton() {
     if (!rows[workGroup] || rows[workGroup].length === 0) return;
   
     const newRows = [...rows[workGroup]];
-    const newCheckedRows = [];
+    const newCheckedRows = checkedRows.slice().sort((a, b) => b - a);
   
-    // Traverse in reverse order to avoid conflicts
-    for (let i = checkedRows.length - 1; i >= 0; i--) {
-      const index = checkedRows[i];
-      if (index < newRows.length - 1) {
+    // Traverse each checked row in reverse and move it down
+    for (let i = 0; i < newCheckedRows.length; i++) {
+      const index = newCheckedRows[i];
+      if (index < newRows.length - 1 && !newCheckedRows.includes(index + 1)) {
         // Swap elements
         const temp = newRows[index];
         newRows[index] = newRows[index + 1];
         newRows[index + 1] = temp;
   
-        // Adjust the checked rows indices
-        newCheckedRows.push(index + 1);
-      } else {
-        newCheckedRows.push(index);
+        // Update the checkedRows with new positions
+        newCheckedRows[i] = index + 1;
       }
     }
   
@@ -192,6 +206,10 @@ export default function TableButton() {
       }
     }
   };
+  
+  
+
+
 
   const handleAddClick = () => {
     if (rows && rows[workGroup]) {
@@ -259,11 +277,10 @@ export default function TableButton() {
             <path d="M440-800v487L216-537l-56 57 320 320 320-320-56-57-224 224v-487h-80Z" />
           </svg>
         </div>
-        </>
-        )}
 
         <div className="ml-4 mr-4 text-gray-300">|</div>
-
+          </>
+        )}
         <div className="load hover:bg-blue-100 p-1 hover:cursor-pointer swiper-slide">
           <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
             <path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z" />
