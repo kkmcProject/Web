@@ -1,40 +1,64 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const TableComponent = () => {
-  const initialUsers = [
-    { id: 1, name: '하태성', position: '관리자', role: 'Admin', team: '1반' },
-    { id: 2, name: '이도현', position: '작업반', role: 'User', team: '2반' },
-    { id: 3, name: '홍성빈', position: '일용직', role: 'User', team: '3반' },
-  ];
+  const initialUsers = [];
 
   const [users, setUsers] = useState(initialUsers);
   const [isEditing, setIsEditing] = useState(false);
-  const [editedRoles, setEditedRoles] = useState(initialUsers.map(user => ({ id: user.id, role: user.role })));
+  const [editedRoles, setEditedRoles] = useState([]);
 
   const handleEditClick = () => {
     setIsEditing(true);
+    setEditedRoles(users.map(user => ({ id: user.id, role: user.role })));
   };
 
   const handleRoleChange = (userId, event) => {
     const newRole = event.target.value;
-    setEditedRoles(editedRoles.map(user => 
+    setEditedRoles(editedRoles.map(user =>
       user.id === userId ? { ...user, role: newRole } : user
     ));
   };
 
-  const handleSaveClick = () => {
+  const handleSaveClick = async () => {
+    for (const editedRole of editedRoles) {
+      await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/getAllUserData`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: editedRole.id, role: editedRole.role }),
+      });
+    }
     setUsers(users.map(user => {
-      const editedUser = editedRoles.find(edited => edited.id === user.id);
-      return editedUser ? { ...user, role: editedUser.role } : user;
+      const editedRole = editedRoles.find(edited => edited.id === user.id);
+      return editedRole ? { ...user, role: editedRole.role } : user;
     }));
     setIsEditing(false);
   };
 
+  const fetchAllUserData = async () => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/getAllUserData`, {
+        method: "POST",
+        credentials: "include",
+      });
+      const data = await response.json();
+      setUsers(data.result.rows);
+      console.log("data는 ", data.result.rows);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  useEffect(() => {
+    fetchAllUserData();
+  }, []);
+
   return (
-    <div className="flex items-center justify-center min-h-screen bg-white">
-      <div className="container mx-auto">
+    <div className="flex justify-center h-full w-full tablet:bg-white tablet:mt-52 zero-to-tablet:mt-24">
+      <div className="container w-full mx-auto">
         <table className="min-w-full bg-white border border-gray-400 table-fixed">
           <thead className="bg-gray-200">
             <tr>
@@ -55,7 +79,7 @@ const TableComponent = () => {
                   {isEditing ? (
                     <input
                       type="text"
-                      value={editedRoles.find(edited => edited.id === user.id).role}
+                      value={editedRoles.find(edited => edited.id === user.id)?.role || ''}
                       onChange={(event) => handleRoleChange(user.id, event)}
                       className="w-full px-2 py-1 border rounded text-center"
                       style={{ maxWidth: '100px', height: '2rem' }}
@@ -64,19 +88,19 @@ const TableComponent = () => {
                     <span>{user.role}</span>
                   )}
                 </td>
-                <td className="py-2 px-4 border border-gray-400 text-center">{user.team}</td>
+                <td className="py-2 px-4 border border-gray-400 text-center">{user.class}</td>
               </tr>
             ))}
           </tbody>
         </table>
         <div className="mt-4 flex justify-end space-x-2">
-          <button 
+          <button
             onClick={handleEditClick}
             className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700"
           >
             정보 수정
           </button>
-          <button 
+          <button
             onClick={handleSaveClick}
             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
           >

@@ -53,7 +53,7 @@ export default function Headnav() {
         </div>
       </div>
 
-      {pathname !== "/change-info" && (
+      {pathname !== "/change-info" && pathname !== "/manager" && (
   <>
     {/* 테블릿 이상일 때 보여줄 탭과 버튼 */}
     <div className="flex border-b-2 w-full border-gray-100 zero-to-tablet:hidden mt-2 justify-between items-center mb-2">
@@ -70,7 +70,6 @@ export default function Headnav() {
     </div>
   </>
 )}
-
     </div>
   );
 }
