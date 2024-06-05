@@ -1153,6 +1153,10 @@ const RAW_RUNTIME_STATE =
       "npm:0.7.0"\
     ],\
     [\
+      "child_process",\
+      "npm:1.0.2"\
+    ],\
+    [\
       "chokidar",\
       "npm:3.6.0"\
     ],\
@@ -2565,6 +2569,10 @@ const RAW_RUNTIME_STATE =
       "npm:1.3.3"\
     ],\
     [\
+      "path",\
+      "npm:0.12.7"\
+    ],\
+    [\
       "path-browserify",\
       "npm:1.0.1"\
     ],\
@@ -2731,6 +2739,10 @@ const RAW_RUNTIME_STATE =
     [\
       "proc-log",\
       "npm:4.2.0"\
+    ],\
+    [\
+      "process",\
+      "npm:0.11.10"\
     ],\
     [\
       "promise-retry",\
@@ -3331,6 +3343,10 @@ const RAW_RUNTIME_STATE =
       "npm:6.0.3"\
     ],\
     [\
+      "util",\
+      "npm:0.10.4"\
+    ],\
+    [\
       "util-deprecate",\
       "npm:1.0.2"\
     ],\
@@ -3576,6 +3592,7 @@ const RAW_RUNTIME_STATE =
           ["@next/font", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:14.2.3"],\
           ["@vercel/postgres", "npm:0.8.0"],\
           ["autoprefixer", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:10.4.19"],\
+          ["child_process", "npm:1.0.2"],\
           ["clsx", "npm:2.1.1"],\
           ["cookie", "npm:0.6.0"],\
           ["cors", "npm:2.8.5"],\
@@ -3596,6 +3613,7 @@ const RAW_RUNTIME_STATE =
           ["oidc-token-hash", "npm:5.0.1"],\
           ["openssl", "npm:2.0.0"],\
           ["papaparse", "npm:5.4.1"],\
+          ["path", "npm:0.12.7"],\
           ["postcss", "npm:8.4.38"],\
           ["prettier", "npm:3.2.5"],\
           ["react", "npm:18.3.1"],\
@@ -8257,6 +8275,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["child_process", [\
+      ["npm:1.0.2", {\
+        "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/child_process-npm-1.0.2-04e116a38e-10c0.zip/node_modules/child_process/",\
+        "packageDependencies": [\
+          ["child_process", "npm:1.0.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["chokidar", [\
       ["npm:3.3.1", {\
         "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/chokidar-npm-3.3.1-98709e3b9f-10c0.zip/node_modules/chokidar/",\
@@ -10973,6 +11000,13 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
+      ["npm:2.0.3", {\
+        "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/inherits-npm-2.0.3-401e64b080-10c0.zip/node_modules/inherits/",\
+        "packageDependencies": [\
+          ["inherits", "npm:2.0.3"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
       ["npm:2.0.4", {\
         "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/inherits-npm-2.0.4-c66b3957a0-10c0.zip/node_modules/inherits/",\
         "packageDependencies": [\
@@ -11697,6 +11731,7 @@ const RAW_RUNTIME_STATE =
           ["@next/font", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:14.2.3"],\
           ["@vercel/postgres", "npm:0.8.0"],\
           ["autoprefixer", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:10.4.19"],\
+          ["child_process", "npm:1.0.2"],\
           ["clsx", "npm:2.1.1"],\
           ["cookie", "npm:0.6.0"],\
           ["cors", "npm:2.8.5"],\
@@ -11717,6 +11752,7 @@ const RAW_RUNTIME_STATE =
           ["oidc-token-hash", "npm:5.0.1"],\
           ["openssl", "npm:2.0.0"],\
           ["papaparse", "npm:5.4.1"],\
+          ["path", "npm:0.12.7"],\
           ["postcss", "npm:8.4.38"],\
           ["prettier", "npm:3.2.5"],\
           ["react", "npm:18.3.1"],\
@@ -12999,6 +13035,17 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["path", [\
+      ["npm:0.12.7", {\
+        "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/path-npm-0.12.7-bddabe2e86-10c0.zip/node_modules/path/",\
+        "packageDependencies": [\
+          ["path", "npm:0.12.7"],\
+          ["process", "npm:0.11.10"],\
+          ["util", "npm:0.10.4"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["path-browserify", [\
       ["npm:1.0.1", {\
         "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/path-browserify-npm-1.0.1-f975d99a99-10c0.zip/node_modules/path-browserify/",\
@@ -13522,6 +13569,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/proc-log-npm-4.2.0-4d65296a9d-10c0.zip/node_modules/proc-log/",\
         "packageDependencies": [\
           ["proc-log", "npm:4.2.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["process", [\
+      ["npm:0.11.10", {\
+        "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/process-npm-0.11.10-aeb3b641ae-10c0.zip/node_modules/process/",\
+        "packageDependencies": [\
+          ["process", "npm:0.11.10"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -15446,6 +15502,16 @@ const RAW_RUNTIME_STATE =
           ["utf-8-validate", "npm:6.0.3"],\
           ["node-gyp", "npm:10.1.0"],\
           ["node-gyp-build", "npm:4.8.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["util", [\
+      ["npm:0.10.4", {\
+        "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/util-npm-0.10.4-7c577db41a-10c0.zip/node_modules/util/",\
+        "packageDependencies": [\
+          ["util", "npm:0.10.4"],\
+          ["inherits", "npm:2.0.3"]\
         ],\
         "linkType": "HARD"\
       }]\
