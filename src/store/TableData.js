@@ -16,5 +16,5 @@ export const useTableData = create(set => ({
   setRows: rows => set({ rows }),
   setCheckedRows: checkedRows => set({ checkedRows }),
   setHeaders: headers => set({headers}),
-  setFilteredColumns : () => set({filteredColumns}),
+  setFilteredColumns : filteredColumns => set({filteredColumns}),
 }));

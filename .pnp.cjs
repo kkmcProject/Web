@@ -1649,6 +1649,10 @@ const RAW_RUNTIME_STATE =
       "npm:3.2.0"\
     ],\
     [\
+      "exenv",\
+      "npm:1.2.2"\
+    ],\
+    [\
       "exponential-backoff",\
       "npm:3.1.1"\
     ],\
@@ -2785,6 +2789,14 @@ const RAW_RUNTIME_STATE =
       "npm:16.13.1"\
     ],\
     [\
+      "react-lifecycles-compat",\
+      "npm:3.0.4"\
+    ],\
+    [\
+      "react-modal",\
+      "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:3.16.1"\
+    ],\
+    [\
       "read-cache",\
       "npm:1.0.0"\
     ],\
@@ -3343,6 +3355,10 @@ const RAW_RUNTIME_STATE =
       "npm:34.2.1"\
     ],\
     [\
+      "warning",\
+      "npm:4.0.3"\
+    ],\
+    [\
       "wcwidth",\
       "npm:1.0.1"\
     ],\
@@ -3584,6 +3600,7 @@ const RAW_RUNTIME_STATE =
           ["prettier", "npm:3.2.5"],\
           ["react", "npm:18.3.1"],\
           ["react-dom", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:18.3.1"],\
+          ["react-modal", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:3.16.1"],\
           ["rxjs", "npm:7.8.1"],\
           ["swiper", "npm:11.1.4"],\
           ["tailwindcss", "npm:3.4.3"],\
@@ -10003,6 +10020,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["exenv", [\
+      ["npm:1.2.2", {\
+        "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/exenv-npm-1.2.2-eeb9069149-10c0.zip/node_modules/exenv/",\
+        "packageDependencies": [\
+          ["exenv", "npm:1.2.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["exponential-backoff", [\
       ["npm:3.1.1", {\
         "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/exponential-backoff-npm-3.1.1-04df458b30-10c0.zip/node_modules/exponential-backoff/",\
@@ -11695,6 +11721,7 @@ const RAW_RUNTIME_STATE =
           ["prettier", "npm:3.2.5"],\
           ["react", "npm:18.3.1"],\
           ["react-dom", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:18.3.1"],\
+          ["react-modal", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:3.16.1"],\
           ["rxjs", "npm:7.8.1"],\
           ["swiper", "npm:11.1.4"],\
           ["tailwindcss", "npm:3.4.3"],\
@@ -13667,6 +13694,45 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["react-lifecycles-compat", [\
+      ["npm:3.0.4", {\
+        "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/react-lifecycles-compat-npm-3.0.4-d5e285a39e-10c0.zip/node_modules/react-lifecycles-compat/",\
+        "packageDependencies": [\
+          ["react-lifecycles-compat", "npm:3.0.4"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["react-modal", [\
+      ["npm:3.16.1", {\
+        "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/react-modal-npm-3.16.1-3ba7cf9e93-10c0.zip/node_modules/react-modal/",\
+        "packageDependencies": [\
+          ["react-modal", "npm:3.16.1"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:3.16.1", {\
+        "packageLocation": "./.yarn/__virtual__/react-modal-virtual-4bcbe8c01d/2/Users/Dodo/AppData/Local/Yarn/Berry/cache/react-modal-npm-3.16.1-3ba7cf9e93-10c0.zip/node_modules/react-modal/",\
+        "packageDependencies": [\
+          ["react-modal", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:3.16.1"],\
+          ["@types/react", null],\
+          ["@types/react-dom", null],\
+          ["exenv", "npm:1.2.2"],\
+          ["prop-types", "npm:15.8.1"],\
+          ["react", "npm:18.3.1"],\
+          ["react-dom", "virtual:617734ddac9758eeb4bee73c94542905406804a33c66222be4d17e63397076d9d3c4951474e194849ad059b06636013ac956370b3501a14c2b109984a39ce600#npm:18.3.1"],\
+          ["react-lifecycles-compat", "npm:3.0.4"],\
+          ["warning", "npm:4.0.3"]\
+        ],\
+        "packagePeers": [\
+          "@types/react-dom",\
+          "@types/react",\
+          "react-dom",\
+          "react"\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["read-cache", [\
       ["npm:1.0.0", {\
         "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/read-cache-npm-1.0.0-00fa89ed05-10c0.zip/node_modules/read-cache/",\
@@ -15446,6 +15512,16 @@ const RAW_RUNTIME_STATE =
           ["@vercel/ruby", "npm:2.1.0"],\
           ["@vercel/static-build", "npm:2.5.9"],\
           ["chokidar", "npm:3.3.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["warning", [\
+      ["npm:4.0.3", {\
+        "packageLocation": "../Users/Dodo/AppData/Local/Yarn/Berry/cache/warning-npm-4.0.3-291e921d6d-10c0.zip/node_modules/warning/",\
+        "packageDependencies": [\
+          ["warning", "npm:4.0.3"],\
+          ["loose-envify", "npm:1.4.0"]\
         ],\
         "linkType": "HARD"\
       }]\

@@ -27,6 +27,7 @@
     "papaparse": "^5.4.1",
     "react": "^18",
     "react-dom": "^18",
+    "react-modal": "^3.16.1",
     "rxjs": "^7.8.1",
     "swiper": "^11.1.4",
     "vercel": "^34.2.1",

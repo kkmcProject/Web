@@ -1,32 +1,36 @@
-"use client";
-
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/mousewheel";
 import Swiper from "swiper";
 import { useState, useEffect } from "react";
-import Papa from "papaparse";
 import { useShallow } from "zustand/react/shallow";
 import { useTableData } from "@/store/TableData";
 import { useWorkGroup } from "@/store/WorkGroup";
+import { usePathname } from "next/navigation";
 import clsx from 'clsx';
 import * as XLSX from 'xlsx';
+import Modal from 'react-modal';
+
 export default function TableButton() {
   const defaultSelected = "작업 이동";
-  const [selected , setSelected] = useState(defaultSelected);
-  const { rows, setRows, checkedRows, setCheckedRows, headers } = useTableData(
+  const pathname = usePathname();
+  const [selected, setSelected] = useState(defaultSelected);
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  const { rows, setRows, checkedRows, setCheckedRows, headers, filteredColumns, setFilteredColumns } = useTableData(
     useShallow(state => ({
       rows: state.rows,
       setRows: state.setRows,
       checkedRows: state.checkedRows,
-      setCheckedRows: state.setCheckedRows,
+      setCheckedRows: state.setCheckedRows,      
       headers: state.headers,
+      filteredColumns: state.filteredColumns,
+      setFilteredColumns: state.setFilteredColumns,
     })),
   );
-  const {workGroup, groups, setGroups} = useWorkGroup(
+  const { workGroup, groups, setGroups } = useWorkGroup(
     useShallow(state => ({
-      workGroup: state.workGroup, 
-      groups: state.groups, 
+      workGroup: state.workGroup,
+      groups: state.groups,
       setGroups: state.setGroups
     })),
   );
@@ -55,9 +59,12 @@ export default function TableButton() {
       // 파일이 선택되지 않은 경우 처리 중단
       return;
     }
+
+    // state 초기화
     setCheckedRows([]);
     setFilename(file.name);
-  
+    setFilteredColumns([]);
+
     let readFile = file =>
       new Promise((resolve, reject) => {
         let reader = new FileReader();
@@ -65,25 +72,25 @@ export default function TableButton() {
         reader.onerror = error => reject(error);
         reader.readAsArrayBuffer(file);
       });
-  
+
     let arrayBuffer = await readFile(file);
     let data = new Uint8Array(arrayBuffer);
     let workbook = XLSX.read(data, { type: 'array' });
     let worksheet = workbook.Sheets[workbook.SheetNames[0]];
     let jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-  
+
     // 첫 번째 행(사용자 정의 헤더)을 제외하고 데이터를 가져옵니다.
     jsonData = jsonData.slice(1);
-  
+
     // 사용자 정의 헤더
-    const header = ["품목번호", "업체", "품목", "과수", "원산지", "포장형태", "상품명", "입수", "단량", "특이사항", "수량", "중량", "바코드", "상품명_2", "작업인원", "작업시간(분)", "품종"];
-  
+    const header = ["품목번호", "업체", "품목", "과수", "원산지", "포장형태", "상품명", "입수", "단량", "특이사항", "수량", "중량", "바코드", "상품명_2", "작업인원", "작업시간(분)", ];
+
     // 첫 번째 열에 내용이 없는 행을 제거
     let filteredData = jsonData.filter(row => row[0] !== undefined && row[0] !== null);
-  
+
     // 정의된 헤더 길이에 맞게 데이터를 조정합니다.
     filteredData = filteredData.map(row => row.slice(0, header.length));
-  
+
     // 객체 배열로 변환합니다.
     let resultData = filteredData.map(row => {
       let obj = {};
@@ -92,20 +99,20 @@ export default function TableButton() {
       });
       return obj;
     });
-  
+
     // 무작위로 workGroup 할당
     const groups = ["Group1", "Group2", "Group3", "Group4"];
     resultData = resultData.map(row => ({
       ...row,
       workGroup: groups[Math.floor(Math.random() * groups.length)],
     }));
-  
+
     console.log("Result Data:", resultData);
-  
+
     const uniqueGroups = [...new Set(resultData.map(row => row.workGroup))];
     uniqueGroups.sort();
     setGroups(uniqueGroups);
-    
+    console.log('uniqueGroups:', uniqueGroups);
     const grouped = resultData.reduce((acc, row) => {
       const group = row.workGroup || "전체";
       if (!acc[group]) {
@@ -116,33 +123,33 @@ export default function TableButton() {
       acc[group].push(row);
       return acc;
     }, {});
-  
+
     setRows(grouped);
   };
 
-  
-
   const handleMoveUp = () => {
-    if (rows.length === 0) return;
-
+    if (!rows[workGroup] || rows[workGroup].length === 0) return;
+  
     const newRows = [...rows[workGroup]];
     const newCheckedRows = [];
-
+  
     checkedRows.forEach(index => {
       if (index > 0) {
+        // Swap elements
         const temp = newRows[index];
         newRows[index] = newRows[index - 1];
         newRows[index - 1] = temp;
-
+  
+        // Adjust the checked rows indices
         newCheckedRows.push(index - 1);
       } else {
         newCheckedRows.push(index);
       }
     });
-
-    setRows({...rows, [workGroup]: newRows});
+  
+    setRows({ ...rows, [workGroup]: newRows });
     setCheckedRows(newCheckedRows);
-
+  
     const firstCheckedIndex = newCheckedRows[0];
     if (firstCheckedIndex !== undefined) {
       const element = document.getElementById("index" + firstCheckedIndex);
@@ -151,20 +158,23 @@ export default function TableButton() {
       }
     }
   };
+  
   const handleMoveDown = () => {
-    if (rows.length === 0) return;
+    if (!rows[workGroup] || rows[workGroup].length === 0) return;
   
     const newRows = [...rows[workGroup]];
     const newCheckedRows = [];
   
-    // 역순으로 순회하여 체크된 행을 아래로 이동
+    // Traverse in reverse order to avoid conflicts
     for (let i = checkedRows.length - 1; i >= 0; i--) {
       const index = checkedRows[i];
       if (index < newRows.length - 1) {
+        // Swap elements
         const temp = newRows[index];
         newRows[index] = newRows[index + 1];
         newRows[index + 1] = temp;
   
+        // Adjust the checked rows indices
         newCheckedRows.push(index + 1);
       } else {
         newCheckedRows.push(index);
@@ -182,31 +192,31 @@ export default function TableButton() {
       }
     }
   };
-  
+
   const handleAddClick = () => {
-    if(rows && rows[workGroup]){
+    if (rows && rows[workGroup]) {
       const workGroupRows = rows[workGroup] || [];
       const RowKeys = workGroupRows.length > 0 && workGroupRows[0] ? Object.keys(workGroupRows[0]) : [];
-      
-      const newRows = [...rows[workGroup], {...RowKeys}];
-      setRows({...rows, [workGroup]: newRows,});
+
+      const newRows = [...rows[workGroup], { ...RowKeys }];
+      setRows({ ...rows, [workGroup]: newRows });
 
       // 포커싱
       setTimeout(() => {
         const lastIndex = newRows.length - 1;
         const element = document.getElementById("index" + lastIndex);
-        if(element){
-          element.scrollIntoView({behavior: "smooth", block: "center"});
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth", block: "center" });
           element.focus();
         }
       }, 0)
     }
   }
   const confirmDelete = () => {
-    if(checkedRows.length === 0) return alert("삭제할 행을 선택해주세요.");
-    if(confirm("정말 삭제하시겠습니까?")){
+    if (checkedRows.length === 0) return alert("삭제할 행을 선택해주세요.");
+    if (confirm("정말 삭제하시겠습니까?")) {
       const newRows = rows[workGroup].filter((_, index) => !checkedRows.includes(index));
-      setRows({...rows, [workGroup]: newRows});
+      setRows({ ...rows, [workGroup]: newRows });
       setCheckedRows([]);
       alert("삭제 완료");
     }
@@ -217,24 +227,40 @@ export default function TableButton() {
   const onClickMoveBtn = () => {
     const newRows = rows[workGroup].filter((row, index) => !checkedRows.includes(index)); // 선택되지 않은 행, 갱신해줘야할 행.
     const newGroupRows = rows[selected] || []; // 선택한 작업반의 목록
-    
+
     newGroupRows.push(...checkedRows.map(index => rows[workGroup][index])); // 체크된 행을 선택한 작업반에 추가 
-    setRows({...rows, [workGroup]: newRows, [selected]: newGroupRows});
+    setRows({ ...rows, [workGroup]: newRows, [selected]: newGroupRows });
     setCheckedRows([]);
   }
+
+  const toggleFilterModal = () => {
+    setIsFilterModalOpen(!isFilterModalOpen);
+  };
+
+  const handleFilterChange = (event) => {
+    const { value, checked } = event.target;
+    let newFilters = checked ? [...filteredColumns, value] : filteredColumns.filter(filter => filter !== value);
+    setFilteredColumns(newFilters);
+  };
+
   return (
     <div className="Button flex swiper overflow-hidden h-full items-center">
       <div className="w-full flex text-nowrap swiper-wrapper h-full items-center ">
-        <div className="upward hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide" onClick={handleMoveUp}>
+        {pathname === "/manage-plan" &&
+        (
+          <>
+         <div className="upward hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide" onClick={handleMoveUp}>
           <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
             <path d="M440-160v-487L216-423l-56-57 320-320 320 320-56 57-224-224v487h-80Z" />
           </svg>
-        </div>
-        <div className="downward hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide" onClick={handleMoveDown}>
+          </div>
+          <div className="downward hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide" onClick={handleMoveDown}>
           <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
             <path d="M440-800v487L216-537l-56 57 320 320 320-320-56-57-224 224v-487h-80Z" />
           </svg>
         </div>
+        </>
+        )}
 
         <div className="ml-4 mr-4 text-gray-300">|</div>
 
@@ -255,39 +281,39 @@ export default function TableButton() {
             <path d="M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
           </svg>
         </div>
-        <div className="filter hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide ">
+        <div className="filter hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide " onClick={toggleFilterModal}>
           <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
            <path d="M440-120v-240h80v80h320v80H520v80h-80Zm-320-80v-80h240v80H120Zm160-160v-80H120v-80h160v-80h80v240h-80Zm160-80v-80h400v80H440Zm160-160v-240h80v80h160v80H680v80h-80Zm-480-80v-80h400v80H120Z"/>
           </svg>
         </div>
 
         <div className="ml-2 mr-2 text-gray-300 swiper-slide">|</div>
-        {workGroup !=='전체'  && groups.length > 0 &&
+        {workGroup !== '전체' && groups.length > 0 &&
           <div className="p-1 text-sm">
             <select onChange={handleSelect} value={selected}>
               <option value={defaultSelected}>{defaultSelected}</option>
               {
                 groups.map((group) => {
-                  if(group === workGroup) return ;
+                  if (group === workGroup) return;
                   return (
-                  <option key={group} value={group}>
-                    {group}
-                  </option>
-                  )})
+                    <option key={group} value={group}>
+                      {group}
+                    </option>
+                  )
+                })
               }
             </select>
-            <button className={clsx("ml-2 p-2", 
-            {
-              "hover:cursor-pointer hover:bg-blue-100" : selected !== defaultSelected,
-              "text-gray-300" : selected === defaultSelected
-            })} onClick={onClickMoveBtn} disabled={selected === defaultSelected}>
+            <button className={clsx("ml-2 p-2",
+              {
+                "hover:cursor-pointer hover:bg-blue-100": selected !== defaultSelected,
+                "text-gray-300": selected === defaultSelected
+              })} onClick={onClickMoveBtn} disabled={selected === defaultSelected}>
               확인
             </button>
           </div>}
-        
-        {workGroup !== '전체' && <div className="ml-2 mr-2 text-gray-300">|</div>  }
 
-          
+        {workGroup !== '전체' && rows?.length > 0 && <div className="ml-2 mr-2 text-gray-300">|</div>}
+
         <div className="create hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide text-sm">작업 할당</div>
         <div className="create ml-2 hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide text-sm">작업 저장</div>
         <div className="delete ml-2 hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide" onClick={confirmDelete}>
@@ -297,6 +323,43 @@ export default function TableButton() {
         </div>
       </div>
       <input type="file" id="load-file" accept=".xlsx" onChange={handleLoad} className="hidden" />
+
+      <Modal
+  isOpen={isFilterModalOpen}
+  onRequestClose={toggleFilterModal}
+  contentLabel="Filter Modal"
+  ariaHideApp={false}
+  className="flex flex-col absolute inset-0 m-auto w-3/4 h-3/4 max-w-lg border-2 border-solid border-gray-300 bg-white overflow-auto outline-none"
+>
+  <div>
+    <svg onClick={toggleFilterModal} className="hover:bg-blue-100 hover:cursor-pointer ml-6 mt-6" 
+      xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#5f6368">
+      <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+    </svg>
+  </div>
+  <div className="flex flex-col justify-start items-center">
+    <span className="flex text-lg font-bold">필터링 메뉴</span>
+    <div className="flex flex-col mt-5">
+    {headers.map((header, index) => (
+      header !== '체크' &&
+      <div key={index} className="w-full">
+        <input
+          type="checkbox"
+          id={header}
+          value={header}
+          checked={filteredColumns.includes(header)}
+          onChange={handleFilterChange}
+          className="mr-2"
+        />
+        <label className="ml-2" htmlFor={header}>{header}</label>
+      </div>
+    ))}
     </div>
+  </div>
+</Modal>
+
+
+
+  </div>
   );
 }
