@@ -6,7 +6,7 @@ export async function POST(req) {
       await sql`SELECT id, name, position, role, class
       FROM users
       WHERE role != 'admin';`
-    console.log(result);
+   // console.log(result);
     return new Response(JSON.stringify({ message: "UserData Retrieved Successfully", result }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
@@ -27,7 +27,7 @@ export async function PUT(req) {
       await sql`UPDATE users
                 SET role = ${role}
                 WHERE id = ${id};`
-    console.log(result);
+    //console.log(result);
     return new Response(JSON.stringify({ message: "UserData Updated Successfully", result }), {
       status: 200,
       headers: { "Content-Type": "application/json" },

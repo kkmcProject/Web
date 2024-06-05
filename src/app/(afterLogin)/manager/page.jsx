@@ -9,6 +9,8 @@ const TableComponent = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedRoles, setEditedRoles] = useState([]);
 
+  const validRoles = ['admin', 'manager', 'user'];
+
   const handleEditClick = () => {
     setIsEditing(true);
     setEditedRoles(users.map(user => ({ id: user.id, role: user.role })));
@@ -22,6 +24,12 @@ const TableComponent = () => {
   };
 
   const handleSaveClick = async () => {
+    const invalidRole = editedRoles.find(edited => !validRoles.includes(edited.role));
+    if (invalidRole) {
+      alert(`${invalidRole.id}의 Role은 ${validRoles.join(', ')} 중에 하나여야 합니다.`);
+      return;
+    }
+
     for (const editedRole of editedRoles) {
       await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/getAllUserData`, {
         method: "PUT",
@@ -36,6 +44,7 @@ const TableComponent = () => {
       return editedRole ? { ...user, role: editedRole.role } : user;
     }));
     setIsEditing(false);
+    alert('저장 완료')
   };
 
   const fetchAllUserData = async () => {
@@ -57,7 +66,7 @@ const TableComponent = () => {
   }, []);
 
   return (
-    <div className="flex justify-center h-full w-full tablet:bg-white tablet:mt-52 zero-to-tablet:mt-24">
+    <div className="flex justify-center h-full w-full tablet:bg-white tablet:mt-52 zero-to-tablet:mt-24 px-10">
       <div className="container w-full mx-auto">
         <table className="min-w-full bg-white border border-gray-400 table-fixed">
           <thead className="bg-gray-200">
