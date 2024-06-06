@@ -13,9 +13,5 @@ export const useWorkGroup = create(set => ({
   ...initialState,
   setWorkGroup: workGroup => set({ workGroup }),
   setGroups: groups => set({ groups }),
-<<<<<<< HEAD
-  setWorkGroupCounts: () => {},
-=======
   setWorkGroupCounts: workGroupCounts => set({ workGroupCounts }),
->>>>>>> origin/nahcooy
 }));
