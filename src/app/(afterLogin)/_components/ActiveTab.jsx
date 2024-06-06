@@ -10,10 +10,11 @@ import { useWorkGroup } from "@/store/WorkGroup";
 import { useTableData } from "@/store/TableData";
 
 export default function ActiveTab() {
-  const { workGroup, setWorkGroup } = useWorkGroup(
+  const { workGroup, setWorkGroup, groups } = useWorkGroup(
     useShallow(state => ({
       workGroup : state.workGroup,
       setWorkGroup: state.setWorkGroup,
+      groups: state.groups,
     })),
   );
   const { setCheckedRows } = useTableData(
@@ -21,18 +22,9 @@ export default function ActiveTab() {
       setCheckedRows: state.setCheckedRows,
     }))
   )
-  const defaultData = {
-    전체: [
-      [],
-    ],
-    "Group1": [],
-    "Group2": [],
-    "Group3": [],
-    "Group4": [],
-  };
-  const handleTabClick = tab => () => {
-    setWorkGroup(tab);
-    if(tab !== workGroup){
+  const handleTabClick = tabWorkGroup => () => {
+    setWorkGroup(tabWorkGroup);
+    if(tabWorkGroup !== workGroup){
       setCheckedRows([]);
     }
   }
@@ -57,13 +49,13 @@ export default function ActiveTab() {
   return (
     <div className="flex p-2 swiper overflow-hidden tablet:min-w-120 flex-1">
       <div className="swiper-wrapper">
-        {Object.keys(defaultData).map(tab => (
+        {Object.keys(groups).map(key => (
           <button
-            key={tab}
-            className={`swiper-slide text-center py-2 px-4 border border-gray-300 whitespace-nowrap ${workGroup === tab ? "bg-blue-500 text-white" : "bg-white"}`}
-            onClick={handleTabClick(tab)}
+            key={key}
+            className={`swiper-slide text-center py-2 px-4 border border-gray-300 whitespace-nowrap ${workGroup === groups[key] ? "bg-blue-500 text-white" : "bg-white"}`}
+            onClick={handleTabClick(groups[key])}
           >
-            {tab}
+            {groups[key]}
           </button>
         ))}
       </div>

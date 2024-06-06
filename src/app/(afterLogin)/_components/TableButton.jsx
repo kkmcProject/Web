@@ -16,6 +16,8 @@ export default function TableButton() {
   const pathname = usePathname();
   const [selected, setSelected] = useState(defaultSelected);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  const [isLoadModalOpen, setIsLoadModalOpen] = useState(false);
+
   const { rows, setRows, checkedRows, setCheckedRows, headers, filteredColumns, setFilteredColumns } = useTableData(
     useShallow(state => ({
       rows: state.rows,
@@ -55,10 +57,20 @@ export default function TableButton() {
   }, [checkedRows]);
 
   const handleLoad = async e => {
+    
     let file = e.target.files[0];
     if (!file) {
       // 파일이 선택되지 않은 경우 처리 중단
       return;
+    }
+
+    // 그룹을 몇개 받을건지 입력
+    const groupsArr = ["Group1", "Group2", "Group3", "Group4", "Group5"];
+    const groupCount = prompt("작업반의 개수를 입력해주세요.");
+    
+    let groups = [];
+    for(let i = 0; i< groupCount; i++){
+      groups.push(groupsArr[i]);
     }
 
     // state 초기화
@@ -101,8 +113,7 @@ export default function TableButton() {
       return obj;
     });
 
-    // 무작위로 workGroup 할당
-    const groups = ["Group1", "Group2", "Group3", "Group4"];
+
     resultData = resultData.map(row => ({
       ...row,
       workGroup: groups[Math.floor(Math.random() * groups.length)],
@@ -128,6 +139,8 @@ export default function TableButton() {
     
     const uniqueGroups = [...new Set(resultData.map(row => row.workGroup))];
     uniqueGroups.sort();
+    uniqueGroups.unshift("전체");
+
     setGroups(uniqueGroups);
 
     const grouped = resultData.reduce((acc, row) => {
@@ -137,9 +150,10 @@ export default function TableButton() {
       }
       acc["전체"] = acc["전체"] || [];
       acc["전체"].push(row);
-      acc[group].push(row);
+      acc[group].push({...row, index: acc[group].length});
       return acc;
     }, {});
+
 
     setRows(grouped);
   };
@@ -156,8 +170,8 @@ export default function TableButton() {
       if (index > 0 && !newCheckedRows.includes(index - 1)) {
         // Swap elements
         const temp = newRows[index];
-        newRows[index] = newRows[index - 1];
-        newRows[index - 1] = temp;
+        newRows[index] = { ...newRows[index - 1], index: newRows[index].index };
+        newRows[index - 1] = { ...temp, index: newRows[index - 1].index };
   
         // Update the checkedRows with new positions
         newCheckedRows[i] = index - 1;
@@ -188,8 +202,8 @@ export default function TableButton() {
       if (index < newRows.length - 1 && !newCheckedRows.includes(index + 1)) {
         // Swap elements
         const temp = newRows[index];
-        newRows[index] = newRows[index + 1];
-        newRows[index + 1] = temp;
+        newRows[index] = { ...newRows[index + 1], index: newRows[index].index };
+        newRows[index + 1] = { ...temp, index: newRows[index + 1].index };
   
         // Update the checkedRows with new positions
         newCheckedRows[i] = index + 1;
@@ -216,10 +230,18 @@ export default function TableButton() {
     if (rows && rows[workGroup]) {
       const workGroupRows = rows[workGroup] || [];
       const RowKeys = workGroupRows.length > 0 && workGroupRows[0] ? Object.keys(workGroupRows[0]) : [];
-
-      const newRows = [...rows[workGroup], { ...RowKeys }];
+  
+      // 새로운 행 생성
+      const newRow = RowKeys.reduce((acc, key) => {
+        acc[key] = "";
+        return acc;
+      }, {});
+      newRow.index = workGroupRows.length;
+  
+      const newRows = [...workGroupRows, newRow];
+  
       setRows({ ...rows, [workGroup]: newRows });
-
+  
       // 포커싱
       setTimeout(() => {
         const lastIndex = newRows.length - 1;
@@ -228,32 +250,57 @@ export default function TableButton() {
           element.scrollIntoView({ behavior: "smooth", block: "center" });
           element.focus();
         }
-      }, 0)
+      }, 0);
     }
-  }
+  };
+  
   const confirmDelete = () => {
     if (checkedRows.length === 0) return alert("삭제할 행을 선택해주세요.");
     if (confirm("정말 삭제하시겠습니까?")) {
+      // 삭제할 행을 제외한 새 행 배열 생성
       const newRows = rows[workGroup].filter((_, index) => !checkedRows.includes(index));
-      setRows({ ...rows, [workGroup]: newRows });
+      
+      // 인덱스를 다시 할당
+      const updatedRows = newRows.map((row, index) => ({
+        ...row,
+        index: index
+      }));
+  
+      setRows({ ...rows, [workGroup]: updatedRows });
       setCheckedRows([]);
       alert("삭제 완료");
     }
   }
+  
   const handleSelect = (e) => {
     setSelected(e.target.value);
   }
   const onClickMoveBtn = () => {
-    const newRows = rows[workGroup].filter((row, index) => !checkedRows.includes(index)); // 선택되지 않은 행, 갱신해줘야할 행.
-    const newGroupRows = rows[selected] || []; // 선택한 작업반의 목록
-
-    newGroupRows.push(...checkedRows.map(index => rows[workGroup][index])); // 체크된 행을 선택한 작업반에 추가 
+    // 선택되지 않은 행, 갱신해줘야할 행
+    const newRows = rows[workGroup].filter((row, index) => !checkedRows.includes(index));
+    
+    // 선택한 작업반의 목록
+    const newGroupRows = rows[selected] || [];
+  
+    // 체크된 행을 선택한 작업반에 추가하고 인덱스 갱신
+    const updatedRows = checkedRows.map(index => {
+      const updatedRow = { ...rows[workGroup][index] };
+      updatedRow.index = newGroupRows.length; // 선택한 작업반의 길이에 따라 인덱스 갱신
+      newGroupRows.push(updatedRow);
+      return updatedRow;
+    });
+  
     setRows({ ...rows, [workGroup]: newRows, [selected]: newGroupRows });
     setCheckedRows([]);
   }
+  
 
   const toggleFilterModal = () => {
     setIsFilterModalOpen(!isFilterModalOpen);
+  };
+
+  const toggleLoadModal = () => {
+    setIsLoadModalOpen(!isLoadModalOpen);
   };
 
   const handleFilterChange = (event) => {
@@ -282,7 +329,7 @@ export default function TableButton() {
         <div className="ml-4 mr-4 text-gray-300">|</div>
           </>
         )}
-        <div className="load hover:bg-blue-100 p-1 hover:cursor-pointer swiper-slide">
+        <div className="load hover:bg-blue-100 p-1 hover:cursor-pointer swiper-slide" onClick={toggleLoadModal}>
           <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
             <path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z" />
           </svg>
@@ -374,10 +421,28 @@ export default function TableButton() {
     ))}
     </div>
   </div>
-</Modal>
+      </Modal>
 
-
-
+      <Modal
+  isOpen={isLoadModalOpen}
+  onRequestClose={toggleLoadModal}
+  contentLabel="Filter Modal"
+  ariaHideApp={false}
+  className="flex flex-col absolute inset-0 m-auto w-3/4 h-3/4 max-w-lg border-2 border-solid border-gray-300 bg-white overflow-auto outline-none"
+>
+  <div>
+    <svg onClick={toggleLoadModal} className="hover:bg-blue-100 hover:cursor-pointer ml-6 mt-6" 
+      xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#5f6368">
+      <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+    </svg>
+  </div>
+  <div className="flex flex-col justify-start items-center">
+    <span className="flex text-lg font-bold">작업계획서 불러오기</span>
+    <div className="flex flex-col mt-5">
+      불러올 데이터들..
+    </div>
+  </div>
+      </Modal>
   </div>
   );
 }
