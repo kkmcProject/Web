@@ -46,6 +46,7 @@ export default function TableButton() {
       grabCursor: true,
       slidesPerView: "auto",
       spaceBetween: 0,
+      observer: true,
       keyboard: {
         enabled: true,
         onlyInViewport: false,
