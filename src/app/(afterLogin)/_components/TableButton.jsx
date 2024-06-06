@@ -1,3 +1,5 @@
+"use client";
+
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/mousewheel";
@@ -29,13 +31,16 @@ export default function TableButton() {
       setFilteredColumns: state.setFilteredColumns,
     })),
   );
-  const { workGroup, groups, setGroups } = useWorkGroup(
+  const { workGroup, groups, setGroups, setWorkGroupCounts, workGroupCounts } = useWorkGroup(
     useShallow(state => ({
       workGroup: state.workGroup,
       groups: state.groups,
-      setGroups: state.setGroups
-    })),
+      setGroups: state.setGroups,
+      setWorkGroupCounts: state.setWorkGroupCounts,
+      workGroupCounts: state.workGroupCounts,
+    }))
   );
+
   const [filename, setFilename] = useState("");
 
   useEffect(() => {
@@ -221,9 +226,6 @@ export default function TableButton() {
       }
     }
   };
-  
-  
-
 
 
   const handleAddClick = () => {
@@ -309,6 +311,69 @@ export default function TableButton() {
     setFilteredColumns(newFilters);
   };
 
+  const onClickAlloc = async () => {
+    // 각 workGroup별 인원수 입력
+    const workGroupCounts = {};
+    const uniqueWorkGroups = new Set(Object.keys(rows).filter(key => key !== "전체"));
+  
+    uniqueWorkGroups.forEach(group => {
+      const count = prompt(`Enter number of people for ${group}:`, "0");
+      workGroupCounts[group] = parseInt(count, 10);
+    });
+  
+    setWorkGroupCounts(workGroupCounts);
+  
+    const uniqueProducts = new Set();
+    const productWeights = {};
+  
+    // 고유한 품목 수집
+    rows["전체"].forEach(row => {
+      if (row["품목분류"]) {
+        uniqueProducts.add(row["품목분류"]);
+      }
+    });
+  
+    // 고유한 품목에 대해 가중치 입력
+    uniqueProducts.forEach(product => {
+      const weight = prompt(`Enter weight for ${product}:`, "0");
+      productWeights[product] = parseFloat(weight);
+    });
+  
+    // 작업 난도 열 추가
+    rows["전체"] = rows["전체"].map(row => {
+      const 입수 = parseFloat(row["입수"]);
+      const 수량 = parseFloat(row["수량"]);
+      const weight = productWeights[row["품목분류"]];
+      row["작업 난도"] = weight * 입수 * 수량;
+      return row;
+    });
+  
+    setRows(rows);
+    // console.log(rows);
+    // 작업반 정보 생성
+    const workGroupInfo = Object.keys(workGroupCounts).map(group => ({
+      name: group,
+      count: workGroupCounts[group],
+    }));
+  
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/python`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          rows: rows,
+          workGroup: workGroupInfo,
+        }),
+      });
+      const data = await response.json();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  
+  
   return (
     <div className="Button flex swiper overflow-hidden h-full items-center">
       <div className="w-full flex text-nowrap swiper-wrapper h-full items-center ">
@@ -379,7 +444,7 @@ export default function TableButton() {
 
         {workGroup !== '전체' && rows?.length > 0 && <div className="ml-2 mr-2 text-gray-300">|</div>}
 
-        <div className="create hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide text-sm">작업 할당</div>
+        <div className="create hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide text-sm" onClick={onClickAlloc}>작업 할당</div>
         <div className="create ml-2 hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide text-sm">작업 저장</div>
         <div className="delete ml-2 hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide" onClick={confirmDelete}>
           <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
