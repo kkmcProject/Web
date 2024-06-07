@@ -328,11 +328,11 @@ export default function TableButton() {
   };
 
   const toggleLoadModal = async () => {
-    const flag = isLoadModalOpen;
+    const flag = !isLoadModalOpen;
     setIsLoadModalOpen(!isLoadModalOpen);
     if(flag){
       // 모달이 열리면, 현재 DB에 저장된 파일 리스트를 출력해줄 것임.
-      setPlanTitleList([]);
+      //setPlanTitleList([]);
       try{
         const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/TableListGet`, {
           method: "post",
