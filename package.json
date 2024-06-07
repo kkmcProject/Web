@@ -12,6 +12,8 @@
   "dependencies": {
     "@mswjs/http-middleware": "^0.10.1",
     "@next/font": "^14.2.3",
+    "@nextui-org/spinner": "^2.0.29",
+    "@nextui-org/theme": "^2.2.5",
     "@vercel/postgres": "^0.8.0",
     "child_process": "^1.0.2",
     "clsx": "^2.1.1",

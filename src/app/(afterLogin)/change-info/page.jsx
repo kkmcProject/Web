@@ -317,7 +317,7 @@ function UserPage({ userData }) {
         <ProfileCard title="직급" content={userDetails.position} />
         <ProfileCard title="작업반" content={userDetails.class} />
       </div>
-      <div className="w-full flex p-10 justify-center min-w-96">
+      <div className="w-full flex p-10 justify-center">
         <div className='w-2/3'>
           <h1 className="text-2xl font-bold whitespace-nowrap">직원 프로필 수정</h1>
           <form onSubmit={handleSubmit} className="flex flex-col w-full">

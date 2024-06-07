@@ -13,6 +13,7 @@ import {z} from 'zod';
 import clsx from 'clsx';
 import * as XLSX from 'xlsx';
 import Modal from 'react-modal';
+import Loading from '@/app/(afterLogin)/_components/Loading';
 
 export default function TableButton() {
   const defaultSelected = "작업 이동";
@@ -31,6 +32,7 @@ export default function TableButton() {
 
   const [saveModalErrorMessage, setSaveModalErrorMessage] = useState('');
 
+  const [isLoading , setIsLoading] = useState(false);
   // 모달에 입력하는 state 정의
   const [peoplePerGroup, setPeoplePerGroup] = useState({});
   const [fruitWeights, setFruitWeights] = useState({});
@@ -337,8 +339,7 @@ export default function TableButton() {
     const flag = !isLoadModalOpen;
     setIsLoadModalOpen(!isLoadModalOpen);
     if(flag){
-      // 모달이 열리면, 현재 DB에 저장된 파일 리스트를 출력해줄 것임.
-      //setPlanTitleList([]);
+      setIsLoading(true);
       try{
         const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/TableListGet`, {
           method: "post",
@@ -351,6 +352,8 @@ export default function TableButton() {
         setPlanTitleList(result);
       } catch(err){
         console.log(err);
+      } finally{
+        setIsLoading(false);
       }
     }
   };
@@ -589,6 +592,7 @@ export default function TableButton() {
     }
   }, [pathname])
 
+
   const handleWorkGroupChange = (event) => {
     if(event.target.value === '0'){
       setPeoplePerGroup({});
@@ -740,14 +744,18 @@ export default function TableButton() {
   ariaHideApp={false}
   className="flex flex-col absolute inset-0 m-auto w-3/4 h-3/4 max-w-lg border-2 border-solid border-gray-300 bg-white overflow-auto outline-none"
 >
-  <div>
+
+  <div>    
     <svg onClick={toggleLoadModal} className="hover:bg-blue-100 hover:cursor-pointer ml-6 mt-6" 
       xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#5f6368">
       <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
     </svg>
   </div>
+
   <div className="flex flex-col justify-start items-center">
+
     <span className="flex text-lg font-bold">작업계획서 불러오기</span>
+    {isLoading && <Loading/>}
     <div className="flex flex-col mt-5">
       {planTitleList?.map((title, index) => (
         <div
@@ -827,7 +835,7 @@ export default function TableButton() {
     </div>       
     </Modal>
 
-  <Modal
+    <Modal
   isOpen={isSaveModalOpen}
   onRequestClose={toggleSaveModal}
   contentLabel="Save Modal"
@@ -854,7 +862,7 @@ export default function TableButton() {
       {saveModalErrorMessage.length > 0 && <div className="w-full h-full flex p-2 items-center justify-center text-red-500">{saveModalErrorMessage}</div>}
     </div>
   </div>
-      </Modal>
+    </Modal>
   </div>
   );
 }
