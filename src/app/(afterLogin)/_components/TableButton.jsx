@@ -282,7 +282,7 @@ export default function TableButton() {
   };
   
   const confirmDelete = () => {
-    if (checkedRows.length === 0) return alert("삭제할 행을 선택해주세요.");
+    if (checkedRows.length === 0) return;
     if (confirm("정말 삭제하시겠습니까?")) {
       // 삭제할 행을 제외한 새 행 배열 생성
       const newRows = rows[workGroup].filter((_, index) => !checkedRows.includes(index));
@@ -356,6 +356,7 @@ export default function TableButton() {
   };
 
   const toggleAllocModal = () => {
+    if(!rows || !rows["전체"]) return;
     const flag = !isAllocModalOpen;
     setIsAllocModalOpen(!isAllocModalOpen);
     if(flag){
@@ -380,6 +381,7 @@ export default function TableButton() {
     }
   }
   const toggleSaveModal = () => {
+    if(!rows || !rows["전체"]) return;
     setIsSaveModalOpen(!isSaveModalOpen);
   }
   const handleTitleClick = (title) => {

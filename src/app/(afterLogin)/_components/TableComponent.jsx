@@ -79,7 +79,7 @@ export default function TableComponent() {
 
   return (
     <div className="w-full">
-      {pathname === "/" && <span>작업계획서 : {currentFilename}</span>}
+      {pathname === "/" && currentFilename.length > 0 && <span>작업계획서 : {currentFilename}</span>}
       <table className="min-w-full max-w-full w-full overflow-y-scroll table-auto">
         <thead className="tablet:sticky tablet:top-56 bg-white zero-to-tablet:sticky zero-to-tablet:top-40">
           <tr>

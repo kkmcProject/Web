@@ -310,16 +310,17 @@ function UserPage({ userData }) {
   };
 
   return (
-    <div className="container flex flex-row justify-start items-start p-8 min-h-screen">
-      <div className="profile-section flex-1 min-w-[300px] max-w-[500px] p-10 mt-36">
-        <h1 className="section-title text-2xl font-bold mb-4">직원 profile</h1>
+    <div className="w-full flex flex-row justify-start p-8 tablet:mt-36 zero-to-tablet:mt-8">
+      <div className="p-10 zero-to-tablet:hidden">
+        <h1 className="text-2xl font-bold mb-4">직원 profile</h1>
         <ProfileCard title="이름" content={userDetails.name} />
         <ProfileCard title="직급" content={userDetails.position} />
         <ProfileCard title="작업반" content={userDetails.class} />
       </div>
-      <div className="profile-container flex-1 min-w-[300px] max-w-[500px] p-10 mt-36">
-        <h1 className="section-title text-2xl font-bold mb-0">직원 프로필 수정</h1>
-        <form onSubmit={handleSubmit} className="flex flex-col w-full">
+      <div className="w-full flex p-10 justify-center">
+        <div className='w-2/3'>
+          <h1 className="text-2xl font-bold whitespace-nowrap">직원 프로필 수정</h1>
+          <form onSubmit={handleSubmit} className="flex flex-col w-full">
           <label className="mt-9 text-1xl">이름</label>
           <input
             type="text"
@@ -327,7 +328,7 @@ function UserPage({ userData }) {
             value={userDetails.name}
             onChange={handleInputChange}
             className="w-full p-2 mt-2 border border-gray-300 rounded"
-            placeholder="@username123"
+            placeholder="@이름"
           />
           <label className="mt-9">직급</label>
           <input
@@ -336,7 +337,7 @@ function UserPage({ userData }) {
             value={userDetails.position}
             onChange={handleInputChange}
             className="w-full p-2 mt-2 border border-gray-300 rounded"
-            placeholder="@username123"
+            placeholder="@직급"
           />
           <label className="mt-9">ID</label>
           <input
@@ -359,7 +360,8 @@ function UserPage({ userData }) {
           <button type="submit" className="mt-9 p-2 bg-blue-500 text-white rounded cursor-pointer">
             변경 사항 저장
           </button>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   );
