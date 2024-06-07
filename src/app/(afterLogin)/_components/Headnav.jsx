@@ -35,7 +35,7 @@ export default function Headnav() {
             </button>
           </div>
         </div>
-        <div className="tablet:hidden flex w-full ju tify-between items-center">
+        <div className="tablet:hidden flex w-full justify-between items-center">
           <Image src="/icons/kkmc_logo.png" width={175} height={40} alt="kkmc 로고" />
 
           {/* Tablet 크기 이하일 때만 보이는 네비게이션 바 */}
