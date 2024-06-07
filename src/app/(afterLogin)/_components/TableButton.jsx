@@ -9,6 +9,7 @@ import { useShallow } from "zustand/react/shallow";
 import { useTableData } from "@/store/TableData";
 import { useWorkGroup } from "@/store/WorkGroup";
 import { usePathname } from "next/navigation";
+import {z} from 'zod';
 import clsx from 'clsx';
 import * as XLSX from 'xlsx';
 import Modal from 'react-modal';
@@ -16,14 +17,19 @@ import Modal from 'react-modal';
 export default function TableButton() {
   const defaultSelected = "작업 이동";
   const pathname = usePathname();
+
   const [selected, setSelected] = useState(defaultSelected);
 
   const [planTitleList, setPlanTitleList] = useState([]);
   const [selectedPlanTitle, setSelectedPlanTitle] = useState(null);
+  const [saveFilename, setSaveFilename] = useState(null);
 
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [isLoadModalOpen, setIsLoadModalOpen] = useState(false);
   const [isAllocModalOpen, setIsAllocModalOpen] = useState(false);
+  const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
+
+  const [saveModalErrorMessage, setSaveModalErrorMessage] = useState('');
 
   // 모달에 입력하는 state 정의
   const [peoplePerGroup, setPeoplePerGroup] = useState({});
@@ -373,7 +379,9 @@ export default function TableButton() {
   
     }
   }
-  
+  const toggleSaveModal = () => {
+    setIsSaveModalOpen(!isSaveModalOpen);
+  }
   const handleTitleClick = (title) => {
     setSelectedPlanTitle(title);
   };
@@ -485,8 +493,14 @@ export default function TableButton() {
 };
   
   const onClickSaveBtn = async () => {
-    const filename = prompt("저장할 파일명을 입력해주세요.");
-    if(filename === null || filename === undefined || filename === '') return;
+    const flag = isFilenameStartingWithDate(saveFilename);
+    
+    if(!flag) {
+      setSaveModalErrorMessage('파일명은 YYYY-MM-DD 형식으로 입력해주세요.');
+      return;
+    }
+    setSaveModalErrorMessage('');
+    if(saveFilename === null || saveFilename === undefined || saveFilename === '') return;
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/TableInsert`, {
           method: 'POST',
@@ -494,12 +508,12 @@ export default function TableButton() {
               'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-              filename: filename,
+              filename: saveFilename,
               rows: rows,
           }),
       });
       const data = await response.json();
-      console.log('data는', data);
+      toggleSaveModal();
       
   } catch (err) {
       console.log(err);
@@ -573,14 +587,25 @@ export default function TableButton() {
     }
   }, [pathname])
 
-  useEffect(()=>{
-    console.log('peoplePerGroup은', peoplePerGroup);
-  })
   const handleWorkGroupChange = (event) => {
     if(event.target.value === '0'){
       setPeoplePerGroup({});
     }
     setWorkGroupCounts(event.target.value);
+  }
+  const handleSaveFilenameChange = (event) => {
+    setSaveFilename(event.target.value);
+  }
+
+  const filenamePrefixSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}/);
+  
+  const isFilenameStartingWithDate = (filename) => {
+    try{
+      filenamePrefixSchema.parse(filename);
+      return true;
+    } catch(e) {
+      return false;
+    }
   }
   return (
     <div className="Button flex swiper overflow-hidden h-full items-center">
@@ -660,7 +685,7 @@ export default function TableButton() {
         {workGroup !== '전체' && rows?.length > 0 && <div className="ml-2 mr-2 text-gray-300">|</div>}
 
         <div className="create hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide text-sm" onClick={toggleAllocModal}>작업 할당</div>
-        <div className="create ml-2 hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide text-sm" onClick={onClickSaveBtn}>작업 저장</div>
+        <div className="create ml-2 hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide text-sm" onClick={toggleSaveModal}>작업 저장</div>
         <div className="delete ml-2 hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide" onClick={confirmDelete}>
           <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
             <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
@@ -709,7 +734,7 @@ export default function TableButton() {
     <Modal
   isOpen={isLoadModalOpen}
   onRequestClose={toggleLoadModal}
-  contentLabel="Filter Modal"
+  contentLabel="Load Modal"
   ariaHideApp={false}
   className="flex flex-col absolute inset-0 m-auto w-3/4 h-3/4 max-w-lg border-2 border-solid border-gray-300 bg-white overflow-auto outline-none"
 >
@@ -743,7 +768,7 @@ export default function TableButton() {
     <Modal
   isOpen={isAllocModalOpen}
   onRequestClose={toggleAllocModal}
-  contentLabel="Filter Modal"
+  contentLabel="Alloc Modal"
   ariaHideApp={false}
   className="flex flex-col absolute inset-0 m-auto w-3/4 h-3/4 max-w-lg border-2 border-solid border-gray-300 bg-white overflow-auto outline-none"
 >
@@ -798,8 +823,36 @@ export default function TableButton() {
         작업 할당
       </button>  
     </div>       
-    
     </Modal>
+
+  <Modal
+  isOpen={isSaveModalOpen}
+  onRequestClose={toggleSaveModal}
+  contentLabel="Save Modal"
+  ariaHideApp={false}
+  className="flex flex-col absolute inset-0 m-auto w-fit h-fit max-w-lg border-2 border-solid border-gray-300 bg-white overflow-auto outline-none"
+>
+  <div>
+  </div>
+  <div className="flex flex-col justify-start items-center">
+    <div className="flex flex-col">
+      <div className="w-full flex h-full items-center border-b-2 border-gray-200">
+        <input
+          type="text"
+          placeholder="파일명을 입력해주세요"
+          className="p-2 outline-none"
+          value={saveFilename}
+          onChange={handleSaveFilenameChange}
+        />
+        <div className="ml-2">
+          <button className="ml-2 p-2 hover:bg-blue-300 bg-blue-500 text-white" onClick={onClickSaveBtn}>저장</button>
+          <button className="ml-2 p-2 hover:bg-red-300 bg-red-500 text-white" onClick={toggleSaveModal}>취소</button>
+        </div>
+      </div>
+      {saveModalErrorMessage.length > 0 && <div className="w-full h-full flex p-2 items-center justify-center text-red-500">{saveModalErrorMessage}</div>}
+    </div>
+  </div>
+      </Modal>
   </div>
   );
 }
