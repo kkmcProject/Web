@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+  }
+}
+
+body {
+  min-height: 100%;
+  width: 100%;
+}
+
+html {
+  display: flex;
+  min-height: 100%;
+}
+
+@layer utilities {
+}
+
+.swiper-slide {
+  width: auto !important;
+}
