@@ -44,9 +44,12 @@ export default function TableComponent() {
   };
 
   const handleInputChange = (originIndex, key, value) => {
-    let newRows = [...(rows[workGroup] || [])];
-    newRows[originIndex][key] = value;
-    setRows({ ...rows, [workGroup]: newRows });
+    let newRows = [...rows[workGroup]];
+
+    if (newRows[originIndex]) {
+      newRows[originIndex][key] = value;
+      setRows({ ...rows, [workGroup]: newRows });
+    }
   };
 
   useEffect(() => {
@@ -59,9 +62,8 @@ export default function TableComponent() {
 
      // filteredColumns에 포함된 컬럼을 필터링
    //  newHeaders = newHeaders.filter(header => !filteredColumns.includes(header));
-     setHeaders(newHeaders);
-
-
+    setHeaders(newHeaders);
+    console.log('rows는', rows);
    // ActiveTabRows에서 필터링된 컬럼을 제외
    const filteredRows = workGroupRows.map(row => {
     const filteredRow = { ...row };
@@ -114,8 +116,8 @@ export default function TableComponent() {
                   <td key={key} className="py-2 px-4 border border-gray-300 w-full">
                     <input
                       type="text"
-                      value={row[key]}
-                      onChange={(e) => handleInputChange(rows[workGroup].indexOf(row), key, e.target.value)}
+                      value={rows?.[workGroup]?.[rowIndex]?.[key] ?? ''}
+                      onChange={(e) => handleInputChange(rowIndex, key, e.target.value)}
                       className="bg-transparent border-none focus:outline-none w-fit"/>
                   </td>
                 ))}

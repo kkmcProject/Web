@@ -90,6 +90,7 @@ export async function POST(req) {
           const updatedRows = JSON.parse(fileContent);
           rows['전체'] = rows['전체'].map(item => {
             const updatedItem = updatedRows.find(u => u.index === item.index);
+            console.log("Updated item:", updatedItem);
             return updatedItem ? { ...item, workGroup: updatedItem.group } : item;
           });
           console.log("Result file content:", rows['전체']);

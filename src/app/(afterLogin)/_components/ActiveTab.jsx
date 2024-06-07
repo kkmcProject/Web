@@ -46,6 +46,12 @@ export default function ActiveTab() {
     });
   }, []);
 
+  useEffect(()=>{
+    // 기본 activeTab 설정
+    if(workGroup === ""){
+      setWorkGroup(groups[0]);
+    }
+  }, [groups])
   return (
     <div className="flex p-2 swiper overflow-hidden tablet:min-w-120 flex-1">
       <div className="swiper-wrapper">

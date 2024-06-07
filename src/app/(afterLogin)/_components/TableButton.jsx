@@ -62,27 +62,18 @@ export default function TableButton() {
   }, [checkedRows]);
 
   const handleLoad = async e => {
-    
     let file = e.target.files[0];
     if (!file) {
       // 파일이 선택되지 않은 경우 처리 중단
       return;
     }
-
-    // 그룹을 몇개 받을건지 입력
-    const groupsArr = ["Group1", "Group2", "Group3", "Group4", "Group5"];
-    const groupCount = prompt("작업반의 개수를 입력해주세요.");
-    
-    let groups = [];
-    for(let i = 0; i< groupCount; i++){
-      groups.push(groupsArr[i]);
-    }
-
+  
     // state 초기화
+    setGroups(['전체']);
     setCheckedRows([]);
     setFilename(file.name);
     setFilteredColumns([]);
-
+  
     let readFile = file =>
       new Promise((resolve, reject) => {
         let reader = new FileReader();
@@ -90,25 +81,25 @@ export default function TableButton() {
         reader.onerror = error => reject(error);
         reader.readAsArrayBuffer(file);
       });
-
+  
     let arrayBuffer = await readFile(file);
     let data = new Uint8Array(arrayBuffer);
     let workbook = XLSX.read(data, { type: 'array' });
     let worksheet = workbook.Sheets[workbook.SheetNames[0]];
     let jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-
+  
     // 첫 번째 행(사용자 정의 헤더)을 제외하고 데이터를 가져옵니다.
     jsonData = jsonData.slice(1);
-
+  
     // 사용자 정의 헤더
     const header = ["품목번호", "업체", "품목", "과수", "원산지", "포장형태", "상품명", "입수", "단량", "특이사항", "수량", "중량", "바코드", "상품명_2", "작업인원", "작업시간(분)", ];
-
+  
     // 첫 번째 열에 내용이 없는 행을 제거
     let filteredData = jsonData.filter(row => row[0] !== undefined && row[0] !== null);
-
+  
     // 정의된 헤더 길이에 맞게 데이터를 조정합니다.
     filteredData = filteredData.map(row => row.slice(0, header.length));
-
+  
     // 객체 배열로 변환합니다.
     let resultData = filteredData.map(row => {
       let obj = {};
@@ -117,50 +108,29 @@ export default function TableButton() {
       });
       return obj;
     });
-
-
+  
+    // workGroup 값을 할당합니다.
     resultData = resultData.map(row => ({
       ...row,
-      workGroup: groups[Math.floor(Math.random() * groups.length)],
+      workGroup: '',
     }));
-
-
-
+  
     // 품목분류 열 추가.
-
     const categories = ['키위', '망고', '고구마', '오렌지', '아보카도', '자몽', '레몬', '라임', '체리'];
-
+  
     resultData = resultData.map(item => {
       let newColumn = '';
-
-      for (const category of categories){
-        if(item['품목'].includes(category)){
+  
+      for (const category of categories) {
+        if (item['품목'].includes(category)) {
           newColumn = category;
           break;
         }
       }
       return { ...item, '품목분류': newColumn };
-    })
+    });
+    setRows({'전체': resultData});
     
-    const uniqueGroups = [...new Set(resultData.map(row => row.workGroup))];
-    uniqueGroups.sort();
-    uniqueGroups.unshift("전체");
-
-    setGroups(uniqueGroups);
-
-    const grouped = resultData.reduce((acc, row) => {
-      const group = row.workGroup || "전체";
-      if (!acc[group]) {
-        acc[group] = [];
-      }
-      acc["전체"] = acc["전체"] || [];
-      acc["전체"].push(row);
-      acc[group].push({...row, index: acc[group].length});
-      return acc;
-    }, {});
-
-
-    setRows(grouped);
   };
 
   const handleMoveUp = () => {
@@ -267,7 +237,7 @@ export default function TableButton() {
         ...row,
         index: index
       }));
-  
+      
       setRows({ ...rows, [workGroup]: updatedRows });
       setCheckedRows([]);
       alert("삭제 완료");
@@ -288,6 +258,7 @@ export default function TableButton() {
     const updatedRows = checkedRows.map(index => {
       const updatedRow = { ...rows[workGroup][index] };
       updatedRow.index = newGroupRows.length; // 선택한 작업반의 길이에 따라 인덱스 갱신
+      updatedRow.workGroup = selected;
       newGroupRows.push(updatedRow);
       return updatedRow;
     });
@@ -313,12 +284,24 @@ export default function TableButton() {
 
   const onClickAlloc = async () => {
     // 각 workGroup별 인원수 입력
-    const workGroupCounts = {};
-    const uniqueWorkGroups = new Set(Object.keys(rows).filter(key => key !== "전체"));
+    const groupsArr = ["Group1", "Group2", "Group3", "Group4", "Group5"];
+    const groupCount = prompt("작업반의 개수를 입력해주세요.");
+        
+    let TempGroups = [];
+    for (let i = 0; i < groupCount; i++) {
+        TempGroups.push(groupsArr[i]);
+    }
+    if(groups.length > 0){
+      setGroups(['전체', ...TempGroups]);
+    } else {
+      setGroups([...TempGroups]);
+    }
+
+    const uniqueWorkGroups = TempGroups.filter(group => group !== "전체");
   
     uniqueWorkGroups.forEach(group => {
-      const count = prompt(`Enter number of people for ${group}:`, "0");
-      workGroupCounts[group] = parseInt(count, 10);
+        const count = prompt(`Enter number of people for ${group}:`, "0");
+        workGroupCounts[group] = parseInt(count, 10);
     });
   
     setWorkGroupCounts(workGroupCounts);
@@ -326,58 +309,133 @@ export default function TableButton() {
     const uniqueProducts = new Set();
     const productWeights = {};
   
-    // 고유한 품목 수집
-    rows["전체"].forEach(row => {
-      if (row["품목분류"]) {
-        uniqueProducts.add(row["품목분류"]);
-      }
+
+    const newRows = {...rows};
+    // 고유한 품목 수집 및 undefined 값 빈 문자열로 변경
+    newRows["전체"].forEach(row => {
+        if (row["품목분류"]) {
+            uniqueProducts.add(row["품목분류"]);
+        }
+        Object.keys(row).forEach(key => {
+            if (row[key] === undefined) {
+                row[key] = "";
+            }
+        });
     });
   
     // 고유한 품목에 대해 가중치 입력
     uniqueProducts.forEach(product => {
-      const weight = prompt(`Enter weight for ${product}:`, "0");
-      productWeights[product] = parseFloat(weight);
+        const weight = prompt(`Enter weight for ${product}:`, "0");
+        productWeights[product] = parseFloat(weight);
     });
   
     // 작업 난도 열 추가
-    rows["전체"] = rows["전체"].map(row => {
-      const 입수 = parseFloat(row["입수"]);
-      const 수량 = parseFloat(row["수량"]);
-      const weight = productWeights[row["품목분류"]];
-      row["작업 난도"] = weight * 입수 * 수량;
-      return row;
+    newRows["전체"] = newRows["전체"].map(row => {
+        const 입수 = parseFloat(row["입수"]);
+        const 수량 = parseFloat(row["수량"]);
+        const weight = productWeights[row["품목분류"]];
+        row["작업 난도"] = weight * 입수 * 수량;
+        return row;
     });
   
-    setRows(rows);
-    // console.log(rows);
+    setRows(newRows);
+
     // 작업반 정보 생성
     const workGroupInfo = Object.keys(workGroupCounts).map(group => ({
-      name: group,
-      count: workGroupCounts[group],
+        name: group,
+        count: workGroupCounts[group],
     }));
   
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/python`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/python`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                rows: rows,
+                workGroup: workGroupInfo,
+            }),
+        });
+        const data = await response.json();
+        console.log('updatedRows는', data.updatedRows);
+
+        // newRows["전체"]를 사용하여 reduce를 수행
+        const groupedData = data.updatedRows["전체"].reduce((acc, item) => {
+        // workGroup을 기준으로 그룹화
+         const group = item.workGroup || "전체";
+      
+       // 각 workGroup에 해당하는 배열이 없으면 생성
+         if (!acc[group]) {
+           acc[group] = [];
+         }
+    
+        // 전체 그룹에 항목 추가
+         acc["전체"] = acc["전체"] || [];
+         acc["전체"].push(item);
+    
+        // 해당 workGroup에 항목 추가
+         acc[group].push(item);
+    
+          return acc;
+        }, {});
+  
+        Object.keys(groupedData).forEach(group => {
+          // 인덱스 재할당
+          groupedData[group] = groupedData[group].map((item, index) => ({
+            ...item,
+            index: index,
+          }));
+        });
+        setRows(groupedData);
+        
+    } catch (err) {
+        console.log(err);
+    }
+};
+  
+  const onClickSaveBtn = async () => {
+    const filename = prompt("저장할 파일명을 입력해주세요.");
+    
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/TableInsert`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+              filename: filename,
+              rows: rows,
+          }),
+      });
+      const data = await response.json();
+      console.log('data는', data);
+      
+  } catch (err) {
+      console.log(err);
+    }
+  }
+  
+  const onClickLoadBtn = async () => {
+    try{
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/TableGet`,{
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          rows: rows,
-          workGroup: workGroupInfo,
+          filename: filename,
         }),
-      });
-      const data = await response.json();
-    } catch (err) {
+      })
+      console.log("response는", response);
+    } catch(err) {
       console.log(err);
     }
-  };
-  
-  
+  }
   return (
     <div className="Button flex swiper overflow-hidden h-full items-center">
       <div className="w-full flex text-nowrap swiper-wrapper h-full items-center ">
-        {pathname === "/manage-plan" &&
+        {pathname === "/manage-plan" && workGroup !== '전체' &&
         (
           <>
          <div className="upward hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide" onClick={handleMoveUp}>
@@ -424,7 +482,7 @@ export default function TableButton() {
               <option value={defaultSelected}>{defaultSelected}</option>
               {
                 groups.map((group) => {
-                  if (group === workGroup) return;
+                  if (group === workGroup || group === '전체') return;
                   return (
                     <option key={group} value={group}>
                       {group}
@@ -445,7 +503,7 @@ export default function TableButton() {
         {workGroup !== '전체' && rows?.length > 0 && <div className="ml-2 mr-2 text-gray-300">|</div>}
 
         <div className="create hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide text-sm" onClick={onClickAlloc}>작업 할당</div>
-        <div className="create ml-2 hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide text-sm">작업 저장</div>
+        <div className="create ml-2 hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide text-sm" onClick={onClickSaveBtn}>작업 저장</div>
         <div className="delete ml-2 hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide" onClick={confirmDelete}>
           <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
             <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
@@ -505,6 +563,7 @@ export default function TableButton() {
     <span className="flex text-lg font-bold">작업계획서 불러오기</span>
     <div className="flex flex-col mt-5">
       불러올 데이터들..
+      <button onClick={onClickLoadBtn}>데이터 불러오기</button>
     </div>
   </div>
       </Modal>
