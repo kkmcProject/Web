@@ -327,7 +327,7 @@ function UserPage({ userData }) {
             value={userDetails.name}
             onChange={handleInputChange}
             className="w-full p-2 mt-2 border border-gray-300 rounded"
-            placeholder="@이름"
+            placeholder="이름"
           />
           <label className="mt-9">직급</label>
           <input
@@ -336,7 +336,7 @@ function UserPage({ userData }) {
             value={userDetails.position}
             onChange={handleInputChange}
             className="w-full p-2 mt-2 border border-gray-300 rounded"
-            placeholder="@직급"
+            placeholder="직급"
           />
           <label className="mt-9">ID</label>
           <input
