@@ -91,13 +91,14 @@ export default function TableButton() {
       setCurrentFilename: state.setCurrentFilename,
     })),
   );
-  const { workGroup, groups, setGroups, setWorkGroupCounts, workGroupCounts } = useWorkGroup(
+  const { workGroup, groups, setGroups, setWorkGroupCounts, workGroupCounts, setWorkGroup } = useWorkGroup(
     useShallow(state => ({
       workGroup: state.workGroup,
       groups: state.groups,
       setGroups: state.setGroups,
       setWorkGroupCounts: state.setWorkGroupCounts,
       workGroupCounts: state.workGroupCounts,
+      setWorkGroup: state.setWorkGroup,
     }))
   );
 
@@ -188,7 +189,7 @@ export default function TableButton() {
       return { ...item, '품목분류': newColumn, };
     });
     setRows({'전체': resultData});
-    
+    setWorkGroup('전체');
   };
 
   const handleMoveUp = () => {
@@ -583,6 +584,7 @@ export default function TableButton() {
   }
   const onClickLoadBtn = async () => {
     const flag = '/manage-plan';
+    setWorkGroup('전체');
     LoadDBFile(flag);
   };
   
@@ -593,6 +595,9 @@ export default function TableButton() {
     }
   }, [pathname])
 
+  useEffect(() => {
+    setSelected(defaultSelected);
+  }, [workGroup])
 
   const handleWorkGroupChange = (event) => {
     if(event.target.value === '0'){

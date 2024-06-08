@@ -57,7 +57,8 @@ export default function ActiveTab() {
     if(workGroup === ""){
       setWorkGroup(groups[0]);
     }
-  }, [groups])
+    console.log('workGroup은', workGroup);
+  }, [groups, workGroup])
   return (
     <div className="flex p-2 swiper overflow-hidden tablet:min-w-120 flex-1">
       <div className="swiper-wrapper zero-to-tablet:text-xs">
