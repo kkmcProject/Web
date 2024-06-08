@@ -81,7 +81,7 @@ export default function TableComponent() {
     <div className="w-full">
       {pathname === "/" && currentFilename.length > 0 && <span>작업계획서 : {currentFilename}</span>}
       <table className="min-w-full max-w-full w-full overflow-y-scroll table-auto">
-        <thead className="tablet:sticky tablet:top-56 bg-white zero-to-tablet:sticky under-tablet:top-32 md:top-[104px]">
+        <thead className="tablet:sticky tablet:top-56 bg-white zero-to-tablet:sticky under-tablet:top-[122px] md:top-24">
           <tr>
             {headers.map((header, index) => (
                filteredColumns.includes(header) ? null :
