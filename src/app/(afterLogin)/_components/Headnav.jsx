@@ -76,7 +76,7 @@ export default function Headnav() {
           </div>
         </div>
         <div className="tablet:hidden flex w-full justify-between items-center">
-          <Image src="/icons/kkmc_logo.png" width={175} height={40} alt="kkmc 로고" />
+          <Image src="/icons/kkmc_logo.png" width={80} height={20} alt="kkmc 로고" />
 
           {/* Tablet 크기 이하일 때만 보이는 네비게이션 바 */}
           <div className="w-full h-full flex justify-end items-center">
@@ -109,17 +109,15 @@ export default function Headnav() {
       {pathname !== "/change-info" && pathname !== "/manager" && (
   <>
     {/* 테블릿 이상일 때 보여줄 탭과 버튼 */}
-    <div className="flex border-b-2 w-full border-gray-100 zero-to-tablet:hidden mt-2 justify-between items-center mb-2">
+    <div className="flex border-b-2 w-full border-gray-100 under-tablet:hidden mt-2 justify-between items-center mb-2">
       <ActiveTab />
       <TableButton />
     </div>
 
     {/* 테블릿 이하일 때 보여줄 탭과 버튼 */}
-    <div className="border-b-2 border-gray-100 tablet:hidden w-full">
+    <div className="md:hidden">
       <ActiveTab />
-      <div className="mt-2 mb-2 w-full">
-        <TableButton />
-      </div>
+      <TableButton />
     </div>
   </>
 )}

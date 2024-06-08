@@ -13,9 +13,9 @@ export default function SideMenuBtn() {
       <svg
         className=" hover:bg-gray-300"
         xmlns="http://www.w3.org/2000/svg"
-        height="35px"
+        height="24px"
         viewBox="0 -960 960 960"
-        width="35px"
+        width="24px"
         fill="#5f6368"
         alt="메뉴"
       >

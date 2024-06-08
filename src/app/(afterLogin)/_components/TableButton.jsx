@@ -615,18 +615,18 @@ export default function TableButton() {
     }
   }
   return (
-    <div className="Button flex swiper overflow-hidden h-full items-center">
+    <div className="Button flex swiper overflow-hidden h-full items-center ">
       <div className="w-full flex text-nowrap swiper-wrapper h-full items-center ">
         {pathname === "/manage-plan" && workGroup !== '전체' &&
         (
           <>
          <div className="upward hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide" onClick={handleMoveUp}>
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+          <svg className="w-5 h-5 tablet:w-6 tablet:h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#5f6368">
             <path d="M440-160v-487L216-423l-56-57 320-320 320 320-56 57-224-224v487h-80Z" />
           </svg>
           </div>
           <div className="downward hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide" onClick={handleMoveDown}>
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+          <svg className="w-5 h-5 tablet:w-6 tablet:h-6" xmlns="http://www.w3.org/2000/svg"  viewBox="0 -960 960 960" fill="#5f6368">
             <path d="M440-800v487L216-537l-56 57 320 320 320-320-56-57-224 224v-487h-80Z" />
           </svg>
         </div>
@@ -635,7 +635,7 @@ export default function TableButton() {
           </>
         )}
         <div className="load hover:bg-blue-100 p-1 hover:cursor-pointer swiper-slide" onClick={toggleLoadModal}>
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+          <svg className="w-5 h-5 tablet:w-6 tablet:h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#5f6368">
             <path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z" />
           </svg>
         </div>
@@ -643,20 +643,20 @@ export default function TableButton() {
         <>
         <div className="upload  hover:bg-blue-100 p-1 swiper-slide ">
           <label htmlFor="load-file" className="hover:cursor-pointer">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+            <svg className="w-5 h-5 tablet:w-6 tablet:h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"  fill="#5f6368">
               <path d="M440-200h80v-167l64 64 56-57-160-160-160 160 57 56 63-63v167ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z" />
             </svg>
           </label>
         </div>
         <div className="add hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide" onClick={handleAddClick}>
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+          <svg className="w-5 h-5 tablet:w-6 tablet:h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"  fill="#5f6368">
             <path d="M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
           </svg>
         </div>
         </>
         }
         <div className="filter hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide " onClick={toggleFilterModal}>
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+          <svg className="w-5 h-5 tablet:w-6 tablet:h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#5f6368">
            <path d="M440-120v-240h80v80h320v80H520v80h-80Zm-320-80v-80h240v80H120Zm160-160v-80H120v-80h160v-80h80v240h-80Zm160-80v-80h400v80H440Zm160-160v-240h80v80h160v80H680v80h-80Zm-480-80v-80h400v80H120Z"/>
           </svg>
         </div>
@@ -666,7 +666,7 @@ export default function TableButton() {
 
 
         {workGroup !== '전체' && groups.length > 0 &&
-          <div className="p-1 text-sm swiper-slide">
+          <div className="p-1 text-sm swiper-slide zero-to-tablet:text-xs">
             <select onChange={handleSelect} value={selected} >
               <option value={defaultSelected}>{defaultSelected}</option>
               {
@@ -691,10 +691,10 @@ export default function TableButton() {
 
         {workGroup !== '전체' && rows?.length > 0 && <div className="ml-2 mr-2 text-gray-300">|</div>}
 
-        <div className="create hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide text-sm" onClick={toggleAllocModal}>작업 할당</div>
-        <div className="create ml-2 hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide text-sm" onClick={toggleSaveModal}>작업 저장</div>
+        <div className="create hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide text-sm zero-to-tablet:text-xs" onClick={toggleAllocModal}>작업 할당</div>
+        <div className="create ml-2 hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide text-sm zero-to-tablet:text-xs" onClick={toggleSaveModal}>작업 저장</div>
         <div className="delete ml-2 hover:cursor-pointer hover:bg-blue-100 p-1 swiper-slide" onClick={confirmDelete}>
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 tablet:w-6 tablet:h-6"  viewBox="0 -960 960 960" fill="#5f6368">
             <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
           </svg>
         </div>

@@ -30,7 +30,7 @@ module.exports = {
         "under-foldable": { max: "522px", min: "410" },
         foldable: "523px",
         sm: "640px",
-        "under-tablet": { max: "767px", min: "695px" },
+        "under-tablet": { max: "767px", min: "0px" },
         tablet: "1024px",
         md: "768px",
         "under-large": { max: "1023px", min: "865px" },
