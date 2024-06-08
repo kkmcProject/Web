@@ -7,6 +7,8 @@ import TableButton from "./TableButton";
 import Image from "next/image";
 import ActiveTab from "./ActiveTab";
 import { signOut } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { checkUnsupportedBrowser } from "@/app/_component/checkUnsupportedBrowser";
 
 const links = [
   { name: "Home", href: "/", text: "작업계획서 보기" },
@@ -16,17 +18,55 @@ const links = [
 
 export default function Headnav() {
   const pathname = usePathname();
+  const [deferredPrompt, setDeferredPrompt] = useState(undefined);
 
   const onLogout = () => {
     signOut();
   };
-  
+
+  useEffect(()=>{
+    const handleBeforeInstallPrompt = (e) => {
+      e.preventDefault()
+      setDeferredPrompt(e)
+    }
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    if(typeof window !== 'undefined' && "serviceWorker" in navigator){
+      navigator.serviceWorker
+      .register("/sw.js")
+      .then((reg)=> console.log("sw worker registered", reg))
+      .catch(() => console.log("failed"))
+    }
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    }
+  }, [])
+
+  const promptAppInstall = async () => {
+    const isUnsupportedBrowser = checkUnsupportedBrowser();
+    if(isUnsupportedBrowser){
+      alert("공유 아이콘 -> 홈 화면에 추가를 클릭해 앱으로 편리하게 이용해보세요!");
+    }
+    if(!isUnsupportedBrowser){
+      if(deferredPrompt){
+        deferredPrompt.prompt();
+        await deferredPrompt.userChoice
+        setDeferredPrompt(undefined)
+      } else {
+        alert('이미 저희 서비스를 설치해주셨어요!');
+      }
+    }
+  }
+
   return (
     <div className="w-full ">
       <div className="mt-4 mb-4 zero-to-tablet:flex">
         <div className="zero-to-tablet:hidden tablet:flex">
           <Image src="/icons/kkmc_logo.png" width={350} height={80} alt="kkmc 로고" />
           <div className="flex w-full justify-end items-end">
+            <button onClick={promptAppInstall} className="flex items-start hover:bg-blue-100 mr-4">
+              홈 화면에 추가
+            </button>
             <button className="flex items-center hover:bg-blue-100" onClick={onLogout}>
               <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#5f6368">
                 <path d="M440-440v-400h80v400h-80Zm40 320q-74 0-139.5-28.5T226-226q-49-49-77.5-114.5T120-480q0-80 33-151t93-123l56 56q-48 40-75 97t-27 121q0 116 82 198t198 82q117 0 198.5-82T760-480q0-64-26.5-121T658-698l56-56q60 52 93 123t33 151q0 74-28.5 139.5t-77 114.5q-48.5 49-114 77.5T480-120Z"/>

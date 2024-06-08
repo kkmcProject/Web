@@ -1,10 +1,11 @@
 "use client";
 import clsx from "clsx";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import SideBarItem from "./SideBarItem";
 import { signOut } from "next-auth/react";
 import { useShallow } from "zustand/react/shallow";
 import { useSideBarIsOpen } from "@/store/SideBarIsOpen";
+import { checkUnsupportedBrowser } from "@/app/_component/checkUnsupportedBrowser";
 
 const links = [
   { name: "Home", href: "/", text: "작업계획서 보기" },
@@ -16,7 +17,7 @@ export default function SideBar() {
   const { isOpen, setIsOpen } = useSideBarIsOpen(
     useShallow(state => ({ isOpen: state.isOpen, setIsOpen: state.setIsOpen })),
   );
-
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
   const onLogout = () => {
     signOut();
   };
@@ -45,6 +46,42 @@ export default function SideBar() {
       window.removeEventListener("resize", handleResize);
     };
   });
+
+
+  useEffect(()=>{
+    const handleBeforeInstallPrompt = (e) => {
+      e.preventDefault()
+      setDeferredPrompt(e)
+    }
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    if(typeof window !== 'undefined' && "serviceWorker" in navigator){
+      navigator.serviceWorker
+      .register("/sw.js")
+      .then((reg)=> console.log("sw worker registered", reg))
+      .catch(() => console.log("failed"))
+    }
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    }
+  }, [])
+
+  const promptAppInstall = async () => {
+    const isUnsupportedBrowser = checkUnsupportedBrowser();
+    if(isUnsupportedBrowser){
+      alert("공유 아이콘 -> 홈 화면에 추가를 클릭해 앱으로 편리하게 이용해보세요!");
+    }
+    if(!isUnsupportedBrowser){
+      if(deferredPrompt){
+        deferredPrompt.prompt();
+        await deferredPrompt.userChoice
+        setDeferredPrompt(undefined)
+      } else {
+        alert('이미 저희 서비스를 설치해주셨어요!');
+      }
+    }
+  }
+
 
   return (
     <aside aria-label="채팅 참여자 목록" aria-hidden={!isOpen}>
@@ -85,7 +122,17 @@ export default function SideBar() {
           {links.map(link => (
             <SideBarItem key={link.name} href={link.href} text={link.text} />
           ))}
-          <div className="flex items-end h-full">
+          
+          <div className="flex flex-col justify-end items-end h-full">
+          <div
+              className="pl-2 w-full flex py-6 h-10 border-t-2 items-center hover:bg-gray-300 cursor-pointer"
+              onClick={promptAppInstall}
+            >
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+              <path d="m780-60-60-60 120-120-120-120 60-60 180 180L780-60Zm-460-60v-80H160q-33 0-56.5-23.5T80-280v-480q0-33 23.5-56.5T160-840h640q33 0 56.5 23.5T880-760v280h-80v-280H160v480h520v80h-80v80H320Zm120-240h80v-120h120v-80H520v-120h-80v120H320v80h120v120Zm-280 80v-480 480Z"/>
+            </svg>
+              <span className="ml-2 "> 홈 화면에 추가</span>
+            </div>
             <div
               className="pl-2 w-full flex py-6 h-10 border-t-2 items-center hover:bg-gray-300 cursor-pointer"
               onClick={onLogout}

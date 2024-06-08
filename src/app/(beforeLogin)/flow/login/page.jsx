@@ -2,6 +2,7 @@ import Image from "next/image";
 import LoginForm from "../../_components/LoginForm";
 
 export default function Login() {
+
   return (
     <div
       style={{
@@ -21,7 +22,7 @@ export default function Login() {
         <Image
           src="/icons/kkmc_logo.png"
           alt="로그인 페이지 로고"
-          width={200}
+          width={200} 
           height={150}
           style={{ display: "block", margin: "0 auto" }}
         />
