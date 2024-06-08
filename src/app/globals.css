@@ -23,6 +23,9 @@ html {
 @layer utilities {
 }
 
+.swiper-wrapper{
+  width: 100% !important;
+}
 .swiper-slide {
   width: auto !important;
 }

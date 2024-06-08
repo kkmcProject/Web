@@ -117,7 +117,8 @@ export default function TableButton() {
         onlyInViewport: false,
       },
     });
-  }, [checkedRows]);
+
+  }, []);
 
   const handleLoad = async e => {
     let file = e.target.files[0];
@@ -630,7 +631,7 @@ export default function TableButton() {
           </svg>
         </div>
 
-        <div className="ml-4 mr-4 text-gray-300">|</div>
+        <div className="ml-4 mr-4 text-gray-300 swiper-slide">|</div>
           </>
         )}
         <div className="load hover:bg-blue-100 p-1 hover:cursor-pointer swiper-slide" onClick={toggleLoadModal}>
@@ -665,8 +666,8 @@ export default function TableButton() {
 
 
         {workGroup !== '전체' && groups.length > 0 &&
-          <div className="p-1 text-sm">
-            <select onChange={handleSelect} value={selected}>
+          <div className="p-1 text-sm swiper-slide">
+            <select onChange={handleSelect} value={selected} >
               <option value={defaultSelected}>{defaultSelected}</option>
               {
                 groups.map((group) => {

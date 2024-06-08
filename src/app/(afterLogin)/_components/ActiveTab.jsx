@@ -44,6 +44,12 @@ export default function ActiveTab() {
         onlyInViewport: false,
       },
     });
+    window.addEventListener('load', swiper);
+    window.addEventListener('resize', swiper);
+    return () => {
+      window.removeEventListener('load', swiper);
+      window.removeEventListener('resize', swiper);
+    }
   }, []);
 
   useEffect(()=>{
@@ -54,7 +60,7 @@ export default function ActiveTab() {
   }, [groups])
   return (
     <div className="flex p-2 swiper overflow-hidden tablet:min-w-120 flex-1">
-      <div className="swiper-wrapper">
+      <div className="swiper-wrapper zero-to-tablet:text-xs">
         {Object.keys(groups).map(key => (
           <button
             key={key}
