@@ -1,8 +1,5 @@
-import { exec } from 'child_process';
 import path from 'path';
-import fs from 'fs';
 import { NextResponse } from 'next/server';
-import { v4 as uuidv4 } from 'uuid';
 
 const fruitTranslation = {
   '키위': 'Kiwi',
@@ -16,9 +13,129 @@ const fruitTranslation = {
   '체리': 'Cherry'
 };
 
+function combineFruitsWithIndex(rows) {
+  const combined = {};
+  rows.forEach(row => {
+    const fruit = row.fruit;
+    if (!combined[fruit]) {
+      combined[fruit] = { hard: 0, indices: [] };
+    }
+    combined[fruit].hard += row.hard;
+    combined[fruit].indices.push(row.index);
+  });
+  return Object.keys(combined).map(fruit => ({
+    fruit: fruit,
+    hard: combined[fruit].hard,
+    indices: combined[fruit].indices
+  }));
+}
+
+function splitHighestHard(combinedRows, originalRows) {
+  combinedRows.sort((a, b) => b.hard - a.hard);
+
+  const highestHard = combinedRows[0].hard;
+  const secondHighestHard = combinedRows.length > 1 ? combinedRows[1].hard : 0;
+  const highestFruit = combinedRows[0].fruit;
+
+  const newRows = [];
+  let remainingHard = 0;
+  let splitIndices = [];
+
+  if (highestHard > secondHighestHard) {
+    originalRows.forEach(row => {
+      if (row.fruit === highestFruit) {
+        remainingHard += row.hard;
+        splitIndices.push(row.index);
+        if (remainingHard >= secondHighestHard) {
+          let splitHard = remainingHard - row.hard;
+          if (splitHard > 0) {
+            newRows.push({ fruit: highestFruit, hard: splitHard, indices: splitIndices.slice(0, -1) });
+          }
+          splitHard = row.hard;
+          newRows.push({ fruit: highestFruit, hard: splitHard, indices: [splitIndices[splitIndices.length - 1]] });
+          remainingHard = 0;
+          splitIndices = [];
+        }
+      }
+    });
+
+    if (remainingHard > 0) {
+      newRows.push({ fruit: highestFruit, hard: remainingHard, indices: splitIndices });
+    }
+  }
+
+  const remainingCombinedRows = combinedRows.slice(1);
+  return remainingCombinedRows.concat(newRows);
+}
+
+function heuristicAllocation(rows, groupInfo) {
+  console.log("Starting heuristic allocation");
+
+  let combinedRows = combineFruitsWithIndex(rows);
+  combinedRows = splitHighestHard(combinedRows, rows);
+
+  const groupNames = groupInfo.map(group => group.name);
+  const groupSizes = {};
+  const groupHard = {};
+  const groupFruitCounts = {};
+
+  groupInfo.forEach(group => {
+    groupSizes[group.name] = group.count;
+    groupHard[group.name] = 0;
+    groupFruitCounts[group.name] = {};
+  });
+
+  combinedRows.sort((a, b) => b.hard - a.hard);
+
+  const allocation = {};
+
+  combinedRows.forEach(task => {
+    const minEtaGroup = groupNames.reduce((minGroup, group) => {
+      const eta = groupHard[group] / groupSizes[group];
+      const fruitCount = groupFruitCounts[group][task.fruit] || 0;
+      if (!minGroup || eta < groupHard[minGroup] / groupSizes[minGroup] ||
+          (eta === groupHard[minGroup] / groupSizes[minGroup] && fruitCount < groupFruitCounts[minGroup][task.fruit])) {
+        return group;
+      }
+      return minGroup;
+    }, null);
+
+    if (!allocation[minEtaGroup]) allocation[minEtaGroup] = [];
+    allocation[minEtaGroup].push(...task.indices);
+
+    groupHard[minEtaGroup] += task.hard;
+    if (!groupFruitCounts[minEtaGroup][task.fruit]) {
+      groupFruitCounts[minEtaGroup][task.fruit] = 0;
+    }
+    groupFruitCounts[minEtaGroup][task.fruit] += 1;
+  });
+
+  console.log("Initial allocation from heuristic:");
+  groupNames.forEach(group => {
+    const eta = groupHard[group] / groupSizes[group];
+    const fruits = combinedRows.filter(task => allocation[group].includes(task.indices)).map(task => task.fruit);
+    const indices = allocation[group];
+    console.log(`Group ${group} eta: ${eta}, fruits: ${fruits}, indices: ${indices}`);
+  });
+
+  rows.forEach(task => {
+    groupNames.forEach(group => {
+      if (allocation[group] && allocation[group].includes(task.index)) {
+        task.group = group;
+      }
+    });
+  });
+
+  console.log("Allocation:");
+  rows.forEach(task => {
+    console.log({ index: task.index, group: task.group || 'Not assigned' });
+  });
+
+  return rows;
+}
+
 export async function POST(req) {
   try {
-    // 요청 본문을 파싱
     const body = await req.json();
     const { rows, workGroup } = body;
 
@@ -26,86 +143,47 @@ export async function POST(req) {
       throw new Error('Invalid input data');
     }
 
-    // 전체에서 index 열 추가
     rows['전체'] = rows['전체'].map((item, index) => ({
       ...item,
       index: index + 1
     }));
 
-    // rows_extracted 만들기
     const rows_extracted = rows['전체']
-      .filter(item => item['작업 난도'] !== 0) // 작업 난도가 0인 행 제거
+      .filter(item => item['작업 난도'] !== 0)
       .map(item => ({
         fruit: fruitTranslation[item['품목분류']] || item['품목분류'],
         hard: item['작업 난도'],
         index: item.index
       }));
 
-    if (!rows || !workGroup) {
-      throw new Error('Invalid input data');
-    }
+    const result_rows = heuristicAllocation(rows_extracted, workGroup);
 
-    const scriptPath = path.resolve(`./script.py`); // script.py의 절대 경로를 지정
+    // `groupedData` 생성
+    const groupedData = result_rows.reduce((acc, item) => {
+      // 원본 rows에서 해당 index의 항목 찾기
+      const originalItem = rows['전체'].find(row => row.index === item.index);
 
-    // 임시 파일을 저장할 디렉토리 경로
-    const tempDir = path.resolve(`/tmp`);
-    console.log("tempDir:", tempDir);
-    // temp 디렉토리가 존재하지 않으면 생성
-    if (!fs.existsSync(tempDir)) {
-      fs.mkdirSync(tempDir, { recursive: true });
-    }
+      if (originalItem) {
+        // 그룹화된 데이터에 workGroup 추가
+        originalItem.workGroup = item.group;
 
-    // JSON 데이터를 임시 파일에 저장
-    const rowsFilePath = path.join(tempDir, `${uuidv4()}_rows.json`);
-    const workGroupFilePath = path.join(tempDir, `${uuidv4()}_workGroup.json`);
+        // 전체 그룹에 추가
+        if (!acc['전체']) acc['전체'] = [];
+        acc['전체'].push(originalItem);
 
-    // JSON 데이터를 파일에 쓰기 전에 콘솔에 로그를 남겨서 확인합니다.
-    console.log("Writing JSON data to files");
-    console.log("rowsFilePath:", rowsFilePath);
-    console.log("workGroupFilePath:", workGroupFilePath);
+        // 각 작업 그룹에 항목 추가
+        if (!acc[item.group]) acc[item.group] = [];
+        acc[item.group].push(originalItem);
+      }
+      return acc;
+    }, {});
 
-    // 인코딩 옵션 추가
-    fs.writeFileSync(rowsFilePath, JSON.stringify(rows_extracted), { encoding: 'utf-8' });
-    fs.writeFileSync(workGroupFilePath, JSON.stringify(workGroup), { encoding: 'utf-8' });
+    console.log('groupedData:', groupedData['전체']);
 
-    console.log(`Executing script: python "${scriptPath}" "${rowsFilePath}" "${workGroupFilePath}"`);
-
-    return new Promise((resolve, reject) => {
-      // 파일 경로를 파이썬 스크립트로 전달
-      exec(`python "${scriptPath}" "${rowsFilePath}" "${workGroupFilePath}"`, { encoding: 'utf-8' }, (error, stdout, stderr) => {
-        if (error) {
-          console.error(`exec error: ${error}`);
-          console.error(`stderr: ${stderr}`);
-          fs.unlinkSync(rowsFilePath);
-          fs.unlinkSync(workGroupFilePath);
-          resolve(NextResponse.json({ error: 'Something went wrong', details: stderr }, { status: 500 }));
-        } else {
-          //console.log(`stdout: ${stdout}`);
-
-          // 결과 JSON 파일 읽기 전에 파일 내용을 로그로 출력하여 디버깅
-          const fileContent = fs.readFileSync(rowsFilePath, { encoding: 'utf-8' });
-          
-
-          // 파이썬 스크립트 실행 후 결과 파일을 읽어서 rows 객체 업데이트
-          const updatedRows = JSON.parse(fileContent);
-          rows['전체'] = rows['전체'].map(item => {
-            const updatedItem = updatedRows.find(u => u.index === item.index);
-            //console.log("Updated item:", updatedItem);
-            return updatedItem ? { ...item, workGroup: updatedItem.group } : item;
-          });
-          //console.log("Result file content:", rows['전체']);
-
-          // 결과 파일 삭제
-          fs.unlinkSync(rowsFilePath);
-          fs.unlinkSync(workGroupFilePath);
-
-          resolve(NextResponse.json({ message: 'Success', updatedRows: rows }, { status: 200 }));
-        }
-      });
-    });
+    return new NextResponse(JSON.stringify({ message: 'Success', updatedRows: groupedData }), { status: 200 });
   } catch (error) {
     console.error(`Request error: ${error}`);
-    return NextResponse.json({ error: 'Internal Server Error', details: error.message }, { status: 500 });
+    return new NextResponse(JSON.stringify({ error: 'Internal Server Error', details: error.message }), { status: 500 });
   }
 }
 
