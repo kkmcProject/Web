@@ -45,11 +45,11 @@ export async function POST(req) {
       throw new Error('Invalid input data');
     }
 
-    const scriptPath = path.resolve('./script.py'); // script.py의 절대 경로를 지정
+    const scriptPath = path.resolve(`./script.py`); // script.py의 절대 경로를 지정
 
     // 임시 파일을 저장할 디렉토리 경로
-    const tempDir = path.resolve('./tmp');
-    
+    const tempDir = path.resolve(`/tmp`);
+    console.log("tempDir:", tempDir);
     // temp 디렉토리가 존재하지 않으면 생성
     if (!fs.existsSync(tempDir)) {
       fs.mkdirSync(tempDir, { recursive: true });
@@ -80,7 +80,7 @@ export async function POST(req) {
           fs.unlinkSync(workGroupFilePath);
           resolve(NextResponse.json({ error: 'Something went wrong', details: stderr }, { status: 500 }));
         } else {
-          console.log(`stdout: ${stdout}`);
+          //console.log(`stdout: ${stdout}`);
 
           // 결과 JSON 파일 읽기 전에 파일 내용을 로그로 출력하여 디버깅
           const fileContent = fs.readFileSync(rowsFilePath, { encoding: 'utf-8' });
@@ -90,10 +90,10 @@ export async function POST(req) {
           const updatedRows = JSON.parse(fileContent);
           rows['전체'] = rows['전체'].map(item => {
             const updatedItem = updatedRows.find(u => u.index === item.index);
-            console.log("Updated item:", updatedItem);
+            //console.log("Updated item:", updatedItem);
             return updatedItem ? { ...item, workGroup: updatedItem.group } : item;
           });
-          console.log("Result file content:", rows['전체']);
+          //console.log("Result file content:", rows['전체']);
 
           // 결과 파일 삭제
           fs.unlinkSync(rowsFilePath);
