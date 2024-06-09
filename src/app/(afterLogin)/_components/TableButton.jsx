@@ -566,6 +566,10 @@ export default function TableButton() {
 
       setRows(result);
       setCheckedRows([]);
+      if(filteredColumns.length === 0){
+        setFilteredColumns(['workGroup', '품목분류', '작업 난도', 'index']);
+      }
+
 
       if(sortedGroups.includes('전체')){
         setGroups(...sortedGroups);
