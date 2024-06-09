@@ -268,7 +268,7 @@ export default function TableButton() {
         return acc;
       }, {});
       newRow.index = workGroupRows.length;
-  
+      newRow.workGroup = workGroup;
       const newRows = [...workGroupRows, newRow];
   
       setRows({ ...rows, [workGroup]: newRows });
@@ -556,14 +556,22 @@ export default function TableButton() {
           result[group].push(mappedItem);
         }
       });
-  
+      
+      Object.keys(result).forEach((key) => {
+        // index 오름차순으로 정렬
+        result[key] = result[key].sort((a, b) => a.index - b.index);
+      })
       console.log('result는', result);
       const sortedGroups = [...TempGroups].sort();
 
       setRows(result);
       setCheckedRows([]);
-      setFilteredColumns(['workGroup', '품목분류', '작업 난도', 'index']);
-      setGroups(['전체', ...sortedGroups]);
+
+      if(sortedGroups.includes('전체')){
+        setGroups(...sortedGroups);
+      } else {
+        setGroups(['전체', ...sortedGroups]);
+      }
     } catch (err) {
       console.log(err);
     }
