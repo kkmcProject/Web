@@ -4,8 +4,7 @@ export async function POST(req) {
   try {
     const result =
       await sql`SELECT id, name, position, role, class
-      FROM users
-      WHERE role != 'admin';`
+      FROM users`;
    // console.log(result);
     return new Response(JSON.stringify({ message: "UserData Retrieved Successfully", result }), {
       status: 200,

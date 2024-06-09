@@ -9,16 +9,28 @@ import ActiveTab from "./ActiveTab";
 import { signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { checkUnsupportedBrowser } from "@/app/_component/checkUnsupportedBrowser";
+import { useSession } from 'next-auth/react';
 
-const links = [
-  { name: "Home", href: "/", text: "작업계획서 보기" },
-  { name: "manage-plan", href: "/manage-plan", text: "작업계획서 관리" },
-  { name: "change-info", href: "/change-info", text: "정보 수정" },
-];
 
 export default function Headnav() {
+  const links = [
+    { name: "Home", href: "/", text: "작업계획서 보기" },
+    { name: "manage-plan", href: "/manage-plan", text: "작업계획서 관리" },
+    { name: "change-info", href: "/change-info", text: "정보 수정" },
+  ];
+
+  
+  const { data : me } = useSession();
   const pathname = usePathname();
   const [deferredPrompt, setDeferredPrompt] = useState(undefined);
+  const role = me?.user?.result?.role;
+
+  if(role === "admin"){
+    links.push({ name: "manager", href: "/manager", text: "권한 수정" });
+  }
+
+  useEffect(()=> {
+  }, [links])
 
   const onLogout = () => {
     signOut();

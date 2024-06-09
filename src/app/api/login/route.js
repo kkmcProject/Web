@@ -5,12 +5,12 @@ export async function POST(req) {
 
   try {
     const result = await sql`
-      SELECT id FROM users 
+      SELECT id, name, position, role, class FROM users 
       WHERE id = ${id} 
       AND password = ${password}
     `;
     if (result.rowCount > 0) {
-      return new Response(JSON.stringify({ message: "Login Success", result: result.rows[0].id }), {
+      return new Response(JSON.stringify({ message: "Login Success", result: result.rows[0] }), {
         status: 200,
         headers: { "Content-Type": "application/json", "Set-Cookie": "connect.sid=msw-cookie;HttpOnly;Path=/" },
       });

@@ -4,62 +4,21 @@ import { useState, useEffect } from 'react';
 import ProfileCard from '../_components/ProfileCard';
 
 export default function ChangeInfoPage() {
-  const { data: me, status } = useSession();
-  const [userData, setUserData] = useState(null);
-  const [role, setRole] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { data: me } = useSession();
+  const role = me?.user?.result?.role;
 
   useEffect(() => {
-    const fetchUserData = async (userId) => {
-      console.log("Fetching role and data for user ID:", userId);  // 디버깅용 로그
-      try {
-        const response = await fetch('/api/getRole', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ id: userId }),
-        });
-        const data = await response.json();
-        if (response.ok) {
-          console.log("Fetched data:", data);  // 디버깅용 로그
-          setRole(data.role);
-          setUserData(data);
-        } else {
-          console.error('Error fetching data:', data.message);
-        }
-      } catch (error) {
-        console.error('Failed to fetch user data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (status === 'authenticated') {
-      const userId = me?.user?.result;
-      console.log("User ID:", userId);  // 디버깅용 로그
-      if (userId) {
-        fetchUserData(userId);
-      } else {
-        console.error("User ID is not available in session");
-        setLoading(false);
-      }
-    } else if (status !== 'loading') {
-      setLoading(false);
-    }
-  }, [status, me]);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
+    console.log('me는', me);
+  })
+  
   if (role === 'admin') {
     return <AdminPage />;
   } else if (role === 'user' || role === 'manager') {
-    return <UserPage userData={userData} />;
+    return <UserPage />;
   } else {
     return <div>No role assigned</div>;
   }
+
 }
 
 // function AdminPage() {
@@ -288,8 +247,14 @@ function AdminPage() {
 
 
 
-function UserPage({ userData }) {
-  const [userDetails, setUserDetails] = useState(userData);
+function UserPage() {
+  const { data: me } = useSession();
+
+  const role = me?.user?.result?.role;
+  useEffect(() => {
+    console.log("me는", me?.user?.result);
+  })
+  const [userDetails, setUserDetails] = useState(me?.user?.result);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

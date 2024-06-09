@@ -6,14 +6,27 @@ import { signOut } from "next-auth/react";
 import { useShallow } from "zustand/react/shallow";
 import { useSideBarIsOpen } from "@/store/SideBarIsOpen";
 import { checkUnsupportedBrowser } from "@/app/_component/checkUnsupportedBrowser";
+import { useSession } from 'next-auth/react';
 
+export default function SideBar() {
+  
 const links = [
   { name: "Home", href: "/", text: "작업계획서 보기" },
   { name: "manage-plan", href: "/manage-plan", text: "작업계획서 관리" },
   { name: "change-info", href: "/change-info", text: "정보 수정" },
 ];
+  const { data : me } = useSession();
+  const role = me?.user?.result?.role;
 
-export default function SideBar() {
+  if(role === "admin"){
+    links.push({ name: "manager", href: "/manager", text: "권한 수정" });
+  }
+
+
+  useEffect(()=> {
+  }, [links])
+
+
   const { isOpen, setIsOpen } = useSideBarIsOpen(
     useShallow(state => ({ isOpen: state.isOpen, setIsOpen: state.setIsOpen })),
   );
@@ -120,7 +133,7 @@ export default function SideBar() {
         </button>
         <div className="flex flex-col h-full">
           {links.map(link => (
-            <SideBarItem key={link.name} href={link.href} text={link.text} />
+            <SideBarItem key={link.name} href={link.href} text={link.text} role={role} />
           ))}
           
           <div className="flex flex-col justify-end items-end h-full">

@@ -11,7 +11,6 @@ import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
   const [errorMsg, dispatch] = useFormState(authenticate, undefined);
-
   const router = useRouter();
 
   const [formData, setFormData] = useState({

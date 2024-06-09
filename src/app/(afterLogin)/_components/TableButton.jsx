@@ -416,20 +416,6 @@ export default function TableButton() {
     }
     console.log('groups는', groups);
     
-    // uniqueWorkGroups.forEach(group => {
-    //     const count = prompt(`Enter number of people for ${group}:`, "0");
-    //     workGroupCounts[group] = parseInt(count, 10);
-    // });
-  
-    // setWorkGroupCounts(workGroupCounts);
-
-    // // 고유한 품목에 대해 가중치 입력
-    // uniqueProducts.forEach(product => {
-    //     const weight = prompt(`Enter weight for ${product}:`, "0");
-    //     productWeights[product] = parseFloat(weight);
-    // });
-  
-    // 작업 난도 열 추가
     const newRows = {...rows};
     
     newRows["전체"] = newRows["전체"].map(row => {

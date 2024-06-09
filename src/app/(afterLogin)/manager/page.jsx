@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-
+import { useSession } from 'next-auth/react';
 const TableComponent = () => {
+  const { data: me } = useSession();
   const initialUsers = [];
 
   const [users, setUsers] = useState(initialUsers);
@@ -66,9 +67,11 @@ const TableComponent = () => {
   }, []);
 
   return (
+    <>
+    {me?.user?.result?.role === 'admin' &&(
     <div className="flex justify-center h-full w-full tablet:bg-white tablet:mt-52 zero-to-tablet:mt-24 px-10">
       <div className="container w-full mx-auto">
-        <table className="min-w-full bg-white border border-gray-400 table-fixed">
+        <table className="min-w-full bg-white border border-gray-400 table-fixed whitespace-nowrap">
           <thead className="bg-gray-200">
             <tr>
               <th className="w-1/12 py-2 px-4 border border-gray-400 text-center">아이디</th>
@@ -118,6 +121,14 @@ const TableComponent = () => {
         </div>
       </div>
     </div>
+    )
+    }
+    {me?.user?.result?.role !== 'admin' && (
+      <div className="flex justify-center h-full w-full tablet:bg-white tablet:mt-52 zero-to-tablet:mt-24 px-10">
+        <h1>권한이 존재하지 않습니다.</h1>
+      </div>
+    )}
+    </>
   );
 };
 

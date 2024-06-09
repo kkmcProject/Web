@@ -48,7 +48,7 @@ export async function POST(req) {
     const scriptPath = path.resolve('./script.py'); // script.py의 절대 경로를 지정
 
     // 임시 파일을 저장할 디렉토리 경로
-    const tempDir = path.resolve('./temp');
+    const tempDir = path.resolve('./tmp');
     
     // temp 디렉토리가 존재하지 않으면 생성
     if (!fs.existsSync(tempDir)) {
